@@ -6,6 +6,8 @@
   """Entry function of core module for the cfg init system."""
 
   (cfg:-setup-cyrillic-shortcuts)
+  (cfg:-setup-indenting)
+  (cfg:-setup-whitespace)
 
   ;; Set file for storing customization information.
   (setq custom-file (expand-file-name "custom.el" cfg:user-dir))
@@ -43,6 +45,22 @@
      (define-key local-function-key-map (vector r) (vector e)))
    "йцукенгшщзхъфывапролджэячсмитьбю"
    "qwertyuiop[]asdfghjkl;'zxcvbnm,."))
+
+(defun cfg:-setup-indenting ()
+  "Setup text indenting."
+  (custom-set-variables
+   '(tab-width 4)
+   '(standard-indent 4)
+   '(indent-tabs-mode nil)
+   '(fill-column 80)))
+
+(defun cfg:-setup-whitespace ()
+  "Setup dealing with whitespace."
+  ;; Always add new line to the end of a file.
+  (customize-set-variable 'require-final-newline t)
+
+  ;; Fix trailing whitespace on file save.
+  (add-hook 'before-save-hook 'whitespace-cleanup))
 
 
 (defun cfg:ask-before-closing ()
