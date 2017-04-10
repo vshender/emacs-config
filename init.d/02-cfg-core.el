@@ -5,15 +5,22 @@
 (defun cfg:core-module-init ()
   """Entry function of core module for the cfg init system."""
 
-  (cfg:-setup-cyrillic-shortcuts)
-  (cfg:-setup-indenting)
-  (cfg:-setup-whitespace)
+  (when (memq window-system '(mac ns))
+    ;; Ensure environment variables inside Emacs look the same as in the user's
+    ;; shell.
+    (cfg:install exec-path-from-shell
+      (require 'exec-path-from-shell)
+      (exec-path-from-shell-initialize)))
 
   ;; Set file for storing customization information.
   (setq custom-file (expand-file-name "custom.el" cfg:user-dir))
   (unless (file-exists-p custom-file)
     (write-region "" nil custom-file))
   (load custom-file)
+
+  (cfg:-setup-cyrillic-shortcuts)
+  (cfg:-setup-indenting)
+  (cfg:-setup-whitespace)
 
   ;; Always select the help window.
   (customize-set-variable 'help-window-select t)
