@@ -31,7 +31,7 @@
   (customize-set-variable 'ido-file-extensions-order '(".yml" ".yaml" ".retry"))
   (add-to-list 'completion-ignored-extensions ".retry")
 
-  (ido-mode)
+  (ido-mode t)
 
   (cfg:install ido-ubiquitous
     (require 'ido-ubiquitous)
@@ -50,5 +50,22 @@
 (defun cfg:-setup-recentf ()
   "Setup recentf."
   (require 'recentf)
+
   (custom-set-variables
-   `(recentf-save-file ,(expand-file-name "recentf" cfg:var-dir))))
+   `(recentf-save-file ,(expand-file-name "recentf" cfg:var-dir))
+   '(recentf-max-saved-items 50)
+   '(recentf-max-menu-items 25))
+
+  (recentf-mode t)
+
+  (defun cfg:ido-recentf-open ()
+    "Use `ido-completing-read' to \\[find-file] a recent file."
+    (interactive)
+    (if (find-file (ido-completing-read "Find recent file: " recentf-list))
+        (message "Opening file...")
+      (message "Aborting")))
+
+  ;; get rid of `find-file-read-only' and replace it with something
+  ;; more useful.
+  ;;(global-set-key (kbd "C-x C-r") 'ido-recentf-open)
+  )
