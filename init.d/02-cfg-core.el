@@ -79,4 +79,4 @@
         (save-buffers-kill-emacs))
     (message "Canceled exit")))
 
-;; 02-cfg-core.el ends here
+;;; 02-cfg-core.el ends here

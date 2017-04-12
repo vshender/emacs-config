@@ -69,3 +69,5 @@
   ;; more useful.
   ;;(global-set-key (kbd "C-x C-r") 'ido-recentf-open)
   )
+
+;;; 32-cfg-global.el ends here
