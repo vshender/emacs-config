@@ -18,13 +18,13 @@
 
 (defvar cfg:plugin-dir (expand-file-name "plugins" user-emacs-directory)
   "Directory for static plugins, i.e. not installed with el-get.")
-(defvar cfg:user-dir (expand-file-name "cfg" user-emacs-directory)
-  "User directory, mainly for generated stuff.")
+(defvar cfg:var-dir (expand-file-name "var" user-emacs-directory)
+  "Data directory, mainly for generated stuff, caches, state data, etc.")
 
 (unless (file-directory-p cfg:plugin-dir)
   (make-directory cfg:plugin-dir 'recursive))
-(unless (file-directory-p cfg:user-dir)
-  (make-directory cfg:user-dir 'recursive))
+(unless (file-directory-p cfg:var-dir)
+  (make-directory cfg:var-dir 'recursive))
 
 (add-to-list 'load-path cfg:plugin-dir)
 (let ((default-directory cfg:plugin-dir))
@@ -115,10 +115,10 @@ module."
 (require 'autoload)
 
 (let* ((cfg:module-dir (expand-file-name "modules" user-emacs-directory))
-       (generated-autoload-file (expand-file-name "loaddefs.el" cfg:user-dir)))
+       (generated-autoload-file (expand-file-name "loaddefs.el" cfg:var-dir)))
   ;; Directory containing autoloads should be included because loaddefs has
   ;; relative paths.
-  (add-to-list 'load-path cfg:user-dir)
+  (add-to-list 'load-path cfg:var-dir)
 
   (if (file-exists-p generated-autoload-file)
       ;; Already been there, just load loaddefs.

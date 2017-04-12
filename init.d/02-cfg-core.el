@@ -13,7 +13,7 @@
       (exec-path-from-shell-initialize)))
 
   ;; Set file for storing customization information.
-  (setq custom-file (expand-file-name "custom.el" cfg:user-dir))
+  (setq custom-file (expand-file-name "custom.el" cfg:var-dir))
   (unless (file-exists-p custom-file)
     (write-region "" nil custom-file))
   (load custom-file)

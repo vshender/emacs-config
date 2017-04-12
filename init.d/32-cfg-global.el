@@ -5,7 +5,8 @@
 (defun cfg:global-module-init ()
   "Entry function of global module for the cfg init system."
 
-  (cfg:-setup-ido))
+  (cfg:-setup-ido)
+  (cfg:-setup-recentf))
 
 
 (defun cfg:-setup-ido ()
@@ -38,10 +39,16 @@
 
   (cfg:install smex
     (customize-set-variable
-     'smex-save-file (locate-user-emacs-file "smex.hist"))
+     'smex-save-file (expand-file-name "smex.hist" cfg:var-dir))
     (smex-initialize)
 
     (global-set-key (kbd "M-x") #'smex)
     (global-set-key (kbd "M-X") #'smex-major-mode-commands)
     ;; This is the old M-x.
     (global-set-key (kbd "C-c C-c M-x") 'execute-extended-command)))
+
+(defun cfg:-setup-recentf ()
+  "Setup recentf."
+  (require 'recentf)
+  (custom-set-variables
+   `(recentf-save-file ,(expand-file-name "recentf" cfg:var-dir))))
