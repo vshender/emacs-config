@@ -6,7 +6,8 @@
   "Entry function of global module for the cfg init system."
 
   (cfg:-setup-ido)
-  (cfg:-setup-recentf))
+  (cfg:-setup-recentf)
+  (cfg:-setup-projectile))
 
 
 (defun cfg:-setup-ido ()
@@ -70,5 +71,19 @@
   ;; more useful.
   ;;(global-set-key (kbd "C-x C-r") 'ido-recentf-open)
   )
+
+(defun cfg:-setup-projectile ()
+  "Setup projectile."
+  (cfg:install projectile
+    (require 'projectile)
+
+    (custom-set-variables
+     '(projectile-mode-line
+       '(:eval (format " prj[%s]" (projectile-project-name))))
+     '(projectile-known-projects-file
+       (expand-file-name "projectile-bookmarks.eld" cfg:var-dir))
+     '(projectile-use-git-grep nil))  ;; in order to grep in local config files
+
+    (projectile-mode t)))
 
 ;;; 32-cfg-global.el ends here
