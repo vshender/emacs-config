@@ -69,8 +69,7 @@
 
   ;; get rid of `find-file-read-only' and replace it with something
   ;; more useful.
-  ;;(global-set-key (kbd "C-x C-r") 'ido-recentf-open)
-  )
+  (global-set-key (kbd "C-x C-r") 'cfg:ido-recentf-open))
 
 (defun cfg:-setup-projectile ()
   "Setup projectile."
