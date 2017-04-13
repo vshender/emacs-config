@@ -17,6 +17,7 @@
    '(ido-everywhere t)
 
    '(ido-enable-last-directory-history t)
+   '(ido-save-directory-list-file (expand-file-name "ido.last" cfg:var-dir))
 
    '(ido-enable-flex-matching t)
    '(ido-enable-prefix nil)
