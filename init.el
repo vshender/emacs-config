@@ -114,8 +114,8 @@ module."
 ;;; we need; for the subsequent runs the generated autoloads will be picked-up.
 (require 'autoload)
 
-(let* ((cfg:module-dir (expand-file-name "modules" user-emacs-directory))
-       (generated-autoload-file (expand-file-name "loaddefs.el" cfg:var-dir)))
+(let ((cfg:module-dir (expand-file-name "modules" user-emacs-directory))
+      (generated-autoload-file (expand-file-name "loaddefs.el" cfg:var-dir)))
   ;; Directory containing autoloads should be included because loaddefs has
   ;; relative paths.
   (add-to-list 'load-path cfg:var-dir)

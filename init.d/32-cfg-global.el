@@ -42,10 +42,11 @@
   (cfg:install smex
     (customize-set-variable
      'smex-save-file (expand-file-name "smex.hist" cfg:var-dir))
-    (smex-initialize)
 
-    (global-set-key (kbd "M-x") #'smex)
-    (global-set-key (kbd "M-X") #'smex-major-mode-commands)
+    (cfg:with-local-autoloads
+      (global-set-key (kbd "M-x") #'smex)
+      (global-set-key (kbd "M-X") #'smex-major-mode-commands))
+
     ;; This is the old M-x.
     (global-set-key (kbd "C-c C-c M-x") 'execute-extended-command)))
 
