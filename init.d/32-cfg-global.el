@@ -135,6 +135,15 @@
       (global-set-key (kbd "C-c h x") #'helm-register)
       (global-set-key (kbd "C-x r l") #'helm-filtered-bookmarks)))
 
+  ;; Set-up helm-swoop.
+  (cfg:install helm-swoop
+    (cfg:with-local-autoloads
+      (global-set-key (kbd "M-s o") 'helm-swoop)
+      (global-set-key (kbd "M-s /") 'helm-multi-swoop)
+
+      ;; When doing isearch, hand the word over to helm-swoop.
+      (define-key isearch-mode-map (kbd "M-i") 'helm-swoop-from-isearch)))
+
   ;; Set-up helm-projectile.
   (cfg:install helm-projectile
     (cfg:with-local-autoloads))
@@ -143,7 +152,8 @@
   (cfg:install helm-ag
     (cfg:with-local-autoloads))
 
-  (eval-after-load "helm" '(cfg:-helm-hook)))
+  (eval-after-load "helm" '(cfg:-helm-hook))
+  (eval-after-load "helm-swoop" '(cfg:-helm-swoop-hook)))
 
 (defun cfg:-helm-hook ()
   "A hook that is called when helm is loaded."
@@ -202,11 +212,23 @@
 
   (helm-mode t)
 
+  (helm-projectile-on)
+
   (custom-set-variables
    '(projectile-completion-system #'helm)
-   '(projectile-switch-project-action #'helm-projectile))
+   '(projectile-switch-project-action #'helm-projectile)))
 
-  (helm-projectile-on))
+(defun cfg:-helm-swoop-hook ()
+  "A hook that is called when helm-swoop is loaded."
+  ;; From helm-swoop to helm-multi-swoop-all.
+  (define-key helm-swoop-map (kbd "M-i")
+    'helm-multi-swoop-all-from-helm-swoop)
+
+  ;; Move up and down like isearch.
+  (define-key helm-swoop-map (kbd "C-r") 'helm-previous-line)
+  (define-key helm-swoop-map (kbd "C-s") 'helm-next-line)
+  (define-key helm-multi-swoop-map (kbd "C-r") 'helm-previous-line)
+  (define-key helm-multi-swoop-map (kbd "C-s") 'helm-next-line))
 
 ;;}}}
 
