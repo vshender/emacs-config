@@ -9,6 +9,8 @@
   (cfg:-setup-recentf)
   (cfg:-setup-projectile))
 
+;;{{{ Setup ido
+;; ----------------------------------------------------------------------------
 
 (defun cfg:-setup-ido ()
   "Setup Interactive Do."
@@ -50,6 +52,11 @@
     ;; This is the old M-x.
     (global-set-key (kbd "C-c C-c M-x") 'execute-extended-command)))
 
+;;}}}
+
+;;{{{ Setup recentf
+;; ----------------------------------------------------------------------------
+
 (defun cfg:-setup-recentf ()
   "Setup recentf."
   (require 'recentf)
@@ -72,6 +79,11 @@
   ;; more useful.
   (global-set-key (kbd "C-x C-r") 'cfg:ido-recentf-open))
 
+;;}}}
+
+;;{{{ Setup projectile
+;; ----------------------------------------------------------------------------
+
 (defun cfg:-setup-projectile ()
   "Setup projectile."
   (cfg:install projectile
@@ -84,6 +96,12 @@
        (expand-file-name "projectile-bookmarks.eld" cfg:var-dir))
      '(projectile-use-git-grep nil))  ;; in order to grep in local config files
 
-    (projectile-mode t)))
+    (projectile-mode t))
+
+  ;; Install ag in order to make `projectile-ag' work.
+  (cfg:install ag
+    (cfg:with-local-autoloads)))
+
+;;}}}
 
 ;;; 32-cfg-global.el ends here
