@@ -7,7 +7,8 @@
 
   (cfg:-setup-ido)
   (cfg:-setup-recentf)
-  (cfg:-setup-projectile))
+  (cfg:-setup-projectile)
+  (cfg:-setup-helm))
 
 ;;{{{ Setup ido
 ;; ----------------------------------------------------------------------------
@@ -17,7 +18,7 @@
   (require 'ido)
 
   (custom-set-variables
-   '(ido-everywhere t)
+   ;; '(ido-everywhere t)
 
    '(ido-enable-last-directory-history t)
    '(ido-save-directory-list-file (expand-file-name "ido.last" cfg:var-dir))
@@ -32,25 +33,27 @@
    '(ido-use-filename-at-point nil)
    '(ido-auto-merge-work-directories-length -1))
 
-  (customize-set-variable 'ido-file-extensions-order '(".yml" ".yaml" ".retry"))
+  (customize-set-variable
+   'ido-file-extensions-order '(".yml" ".yaml" ".retry"))
   (add-to-list 'completion-ignored-extensions ".retry")
 
   (ido-mode t)
 
-  (cfg:install ido-ubiquitous
-    (require 'ido-ubiquitous)
-    (ido-ubiquitous-mode))
-
-  (cfg:install smex
-    (customize-set-variable
-     'smex-save-file (expand-file-name "smex.hist" cfg:var-dir))
-
-    (cfg:with-local-autoloads
-      (global-set-key (kbd "M-x") #'smex)
-      (global-set-key (kbd "M-X") #'smex-major-mode-commands))
-
-    ;; This is the old M-x.
-    (global-set-key (kbd "C-c C-c M-x") 'execute-extended-command)))
+  ;; (cfg:install ido-ubiquitous
+  ;;   (require 'ido-ubiquitous)
+  ;;   (ido-ubiquitous-mode))
+  ;;
+  ;; (cfg:install smex
+  ;;   (customize-set-variable
+  ;;    'smex-save-file (expand-file-name "smex.hist" cfg:var-dir))
+  ;;
+  ;;   (cfg:with-local-autoloads
+  ;;     (global-set-key (kbd "M-x") #'smex)
+  ;;     (global-set-key (kbd "M-X") #'smex-major-mode-commands))
+  ;;
+  ;;   ;; This is the old M-x.
+  ;;   (global-set-key (kbd "C-c C-c M-x") 'execute-extended-command))
+  )
 
 ;;}}}
 
@@ -96,11 +99,114 @@
        (expand-file-name "projectile-bookmarks.eld" cfg:var-dir))
      '(projectile-use-git-grep nil))  ;; in order to grep in local config files
 
+    (customize-set-variable 'projectile-globally-ignored-file-suffixes
+                            '(".png" ".jpg" ".gif" ".svg" ".ico"))
+
     (projectile-mode t))
 
-  ;; Install ag in order to make `projectile-ag' work.
+  ;; Setup ag in order to make `projectile-ag' work.
   (cfg:install ag
     (cfg:with-local-autoloads)))
+
+;;}}}
+
+;;{{{ Setup helm
+;; ----------------------------------------------------------------------------
+
+(defun cfg:-setup-helm ()
+  "Setup helm."
+  (cfg:install helm
+    ;; The default "C-x c" is quite close to "C-x C-c", which quits Emacs.
+    ;; Changed to "C-c h".
+    (global-set-key (kbd "C-c h") 'helm-command-prefix)
+    (global-unset-key (kbd "C-x c"))
+
+    (cfg:with-local-autoloads
+      ;;(global-set-key (kbd "C-x C-f") #'helm-find-files)
+      (global-set-key (kbd "s-f")     #'helm-find-files)
+      (global-set-key (kbd "C-x C-r") #'helm-recentf)
+      (global-set-key (kbd "C-x b")   #'helm-mini)
+      (global-set-key (kbd "s-b")     #'helm-mini)
+      ;;(global-set-key (kbd "C-x C-b") #'helm-buffers-list)
+      (global-set-key (kbd "M-x")     #'helm-M-x)
+      (global-set-key (kbd "M-y")     #'helm-show-kill-ring)
+      (global-set-key (kbd "C-c h g") #'helm-do-grep-ag)
+      (global-set-key (kbd "C-c h o") #'helm-occur)
+      (global-set-key (kbd "C-c h x") #'helm-register)
+      (global-set-key (kbd "C-x r l") #'helm-filtered-bookmarks)))
+
+  ;; Set-up helm-projectile.
+  (cfg:install helm-projectile
+    (cfg:with-local-autoloads))
+
+  ;; Set-up helm-ag in order to make `helm-projectile-ag' work.
+  (cfg:install helm-ag
+    (cfg:with-local-autoloads))
+
+  (eval-after-load "helm" '(cfg:-helm-hook)))
+
+(defun cfg:-helm-hook ()
+  "A hook that is called when helm is loaded."
+
+  ;; Rebind TAB to run persistent action.
+  (define-key helm-map (kbd "<tab>") #'helm-execute-persistent-action)
+  ;; Make TAB work in terminal.
+  (define-key helm-map (kbd "C-i") #'helm-execute-persistent-action)
+  ;; List actions using C-z.
+  (define-key helm-map (kbd "C-z") #'helm-select-action)
+
+  (custom-set-variables
+   ;; Open helm buffer inside current window, not occupy whole other window.
+   '(helm-split-window-in-side-p t)
+   ;; Show current input in header-line of Helm buffer.
+   '(helm-echo-input-in-header-line t)
+   ;; Move to end or beginning of source when reaching top or bottom of source.
+   ;;'(helm-move-to-line-cycle-in-source t)
+
+   ;; Search for library in `require' and `declare-function' sexp.
+   '(helm-ff-search-library-in-sexp t)
+   ;; Scroll 8 lines when scrolling other window using M-<next>/M-<prior>.
+   '(helm-scroll-amount 8)
+
+   ;; Use `recentf-list' instead of `file-name-history' during file opening.
+   '(helm-ff-file-name-history-use-recentf t)
+
+   ;; Enable fuzzy matching.
+   '(helm-buffers-fuzzy-matching t)
+   '(helm-recentf-fuzzy-match    t)
+   '(helm-semantic-fuzzy-match   t)
+   '(helm-imenu-fuzzy-match      t)
+   '(helm-M-x-fuzzy-match        t)
+   '(helm-lisp-fuzzy-completion  t))
+
+  (defun cfg:helm-hide-minibuffer-maybe ()
+    "Hide minibuffer in Helm session if we use the header line as input field."
+    (when (with-helm-buffer helm-echo-input-in-header-line)
+      (let ((ov (make-overlay (point-min) (point-max) nil nil t)))
+        (overlay-put ov 'window (selected-window))
+        (overlay-put ov 'face
+                     (let ((bg-color (face-background 'default nil)))
+                       `(:background ,bg-color :foreground ,bg-color)))
+        (setq-local cursor-type nil))))
+
+  (add-hook 'helm-minibuffer-set-up-hook #'cfg:helm-hide-minibuffer-maybe)
+
+  (when (executable-find "curl")
+    (customize-set-variable 'helm-net-prefer-curl t))
+
+  ;; (custom-set-variables
+  ;;  ;; Limit the window height (works with autoresize-mode).
+  ;;  '(helm-autoresize-min-height 15)
+  ;;  '(helm-autoresize-max-height 40))
+  ;; (helm-autoresize-mode t)
+
+  (helm-mode t)
+
+  (custom-set-variables
+   '(projectile-completion-system #'helm)
+   '(projectile-switch-project-action #'helm-projectile))
+
+  (helm-projectile-on))
 
 ;;}}}
 
