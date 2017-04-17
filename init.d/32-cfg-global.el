@@ -8,7 +8,8 @@
   (cfg:-setup-ido)
   (cfg:-setup-recentf)
   (cfg:-setup-projectile)
-  (cfg:-setup-helm))
+  (cfg:-setup-helm)
+  (cfg:-setup-autocompletion))
 
 ;;{{{ Setup ido
 ;; ----------------------------------------------------------------------------
@@ -44,15 +45,17 @@
   ;;   (ido-ubiquitous-mode))
   ;;
   ;; (cfg:install smex
-  ;;   (customize-set-variable
-  ;;    'smex-save-file (expand-file-name "smex.hist" cfg:var-dir))
-  ;;
   ;;   (cfg:with-local-autoloads
   ;;     (global-set-key (kbd "M-x") #'smex)
-  ;;     (global-set-key (kbd "M-X") #'smex-major-mode-commands))
+  ;;     (global-set-key (kbd "M-X") #'smex-major-mode-commands)
   ;;
-  ;;   ;; This is the old M-x.
-  ;;   (global-set-key (kbd "C-c C-c M-x") 'execute-extended-command))
+  ;;     ;; This is the old M-x.
+  ;;     (global-set-key (kbd "C-c C-c M-x") 'execute-extended-command)
+  ;;
+  ;;     (eval-after-load "smex"
+  ;;       '(progn
+  ;;          (customize-set-variable
+  ;;           'smex-save-file (expand-file-name "smex.hist" cfg:var-dir))))))
   )
 
 ;;}}}
@@ -97,7 +100,8 @@
        '(:eval (format " prj[%s]" (projectile-project-name))))
      '(projectile-known-projects-file
        (expand-file-name "projectile-bookmarks.eld" cfg:var-dir))
-     '(projectile-use-git-grep nil))  ;; in order to grep in local config files
+     '(projectile-use-git-grep nil)  ;; in order to grep in local config files
+     )
 
     (customize-set-variable 'projectile-globally-ignored-file-suffixes
                             '(".png" ".jpg" ".gif" ".svg" ".ico"))
@@ -229,6 +233,42 @@
   (define-key helm-swoop-map (kbd "C-s") 'helm-next-line)
   (define-key helm-multi-swoop-map (kbd "C-r") 'helm-previous-line)
   (define-key helm-multi-swoop-map (kbd "C-s") 'helm-next-line))
+
+;;}}}
+
+;;{{{ Setup autocompletion
+;; ----------------------------------------------------------------------------
+
+(defun cfg:-setup-autocompletion ()
+  "Setup autocompletion using company mode."
+
+  (cfg:install company-mode
+    (require 'company)
+
+    (custom-set-variables
+     '(company-dabbrev-ignore-case t)
+     '(company-dabbrev-code-ignore-case t)
+     '(company-dabbrev-downcase nil)
+     '(company-minimum-prefix-length 2)
+
+     ;; Something universally applied.
+     '(company-backends '((company-capf
+                           :with company-dabbrev-code company-keywords)
+                          company-files
+                          company-dabbrev)))
+
+    ;; Use `company-complete-selection' instead of `company-complete-common' on
+    ;; the Tab key press.
+    (define-key company-active-map (kbd "<tab>") 'company-complete-selection)
+
+    (global-company-mode))
+
+  (cfg:install pos-tip
+    (require 'pos-tip))
+
+  (cfg:install company-quickhelp
+    (require 'company-quickhelp)
+    (company-quickhelp-mode 1)))
 
 ;;}}}
 
