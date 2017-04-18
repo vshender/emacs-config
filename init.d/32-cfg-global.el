@@ -9,7 +9,8 @@
   (cfg:-setup-recentf)
   (cfg:-setup-projectile)
   (cfg:-setup-helm)
-  (cfg:-setup-autocompletion))
+  (cfg:-setup-autocompletion)
+  (cfg:-setup-yasnippet))
 
 ;;{{{ Setup ido
 ;; ----------------------------------------------------------------------------
@@ -269,6 +270,18 @@
   (cfg:install company-quickhelp
     (require 'company-quickhelp)
     (company-quickhelp-mode 1)))
+
+;;}}}
+
+;;{{{ Setup yasnippet
+;; ----------------------------------------------------------------------------
+
+(defun cfg:-setup-yasnippet ()
+  "Setup yasnippet."
+  (cfg:install yasnippet
+    (cfg:with-local-autoloads
+      (eval-after-load "yasnippet"
+        '(yas-reload-all)))))
 
 ;;}}}
 
