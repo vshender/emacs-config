@@ -33,7 +33,11 @@
 
   ;; Text-related UI.
   (show-paren-mode t)          ;; turn visualization of matching parens on
-  (global-hl-line-mode t))     ;; highlight current line
+  (global-hl-line-mode t)      ;; highlight current line
+
+  ;; Increase splitting minimum height in order to prevent splitting a window
+  ;; vertically.
+  (customize-set-variable 'split-height-threshold 255))
 
 (defun cfg:-setup-diminish ()
   "Setup minor modes diminishing."
