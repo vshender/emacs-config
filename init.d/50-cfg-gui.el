@@ -51,7 +51,7 @@
     (load-theme 'solarized-dark t)
 
     (custom-set-variables
-     '(solarized-high-contrast-mode-line t)
+     '(solarized-high-contrast-mode-line nil)
      '(solarized-use-less-bold t))))
 
 (defun cfg:-setup-font ()
