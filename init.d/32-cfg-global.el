@@ -7,6 +7,7 @@
 
   (cfg:-setup-ido)
   (cfg:-setup-recentf)
+  (cfg:-setup-ediff)
   (cfg:-setup-projectile)
   (cfg:-setup-helm)
   (cfg:-setup-autocompletion)
@@ -85,6 +86,25 @@
   ;; get rid of `find-file-read-only' and replace it with something
   ;; more useful.
   (global-set-key (kbd "C-x C-r") 'cfg:ido-recentf-open))
+
+;;}}}
+
+;;{{{ Setup ediff
+;; ----------------------------------------------------------------------------
+
+(defun cfg:-setup-ediff ()
+  "Setup ediff."
+  (custom-set-variables
+   '(ediff-window-setup-function 'ediff-setup-windows-plain)
+   '(ediff-split-window-function 'split-window-horizontally))
+
+  (defun cfg:command-line-diff (switch)
+    (let ((file1 (pop command-line-args-left))
+          (file2 (pop command-line-args-left)))
+      (ediff file1 file2)))
+
+  ;; Usage: emacs -diff file1 file2
+  (add-to-list 'command-switch-alist '("diff" . cfg:command-line-diff)))
 
 ;;}}}
 
