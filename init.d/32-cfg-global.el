@@ -1,4 +1,4 @@
-;; 32-cfg-global.el --- setting up global modes and core plugins  -*- lexical-binding: t -*-
+;;; 32-cfg-global.el --- setting up global modes and core plugins  -*- lexical-binding: t -*-
 
 ;;; Code:
 
@@ -11,7 +11,8 @@
   (cfg:-setup-projectile)
   (cfg:-setup-helm)
   (cfg:-setup-autocompletion)
-  (cfg:-setup-yasnippet))
+  (cfg:-setup-yasnippet)
+  (cfg:-setup-magit))
 
 ;;{{{ Setup ido
 ;; ----------------------------------------------------------------------------
@@ -302,6 +303,28 @@
     (cfg:with-local-autoloads
       (eval-after-load "yasnippet"
         '(yas-reload-all)))))
+
+;;}}}
+
+;;{{{ Setup magit
+;; ----------------------------------------------------------------------------
+
+(defun cfg:-setup-magit ()
+  "Setup magit."
+  ;; Obtain a complete magit repository instead of a shallow one in order to
+  ;; make `magit-version' work.
+  (let ((el-get-git-shallow-clone nil))
+    (cfg:install magit
+      ;; Magit elisp sources are in the "lisp" subdirectory.
+      (let ((default-directory (expand-file-name "lisp" default-directory)))
+        (cfg:with-local-autoloads))))
+
+  (with-eval-after-load "magit"
+    (custom-set-variables
+     '(magit-process-connection-type nil)))
+
+  (global-set-key (kbd "C-c g s") #'magit-status)
+  (global-set-key (kbd "C-c g d") #'magit-dispatch-popup))
 
 ;;}}}
 
