@@ -24,7 +24,7 @@
   (require 'ido)
 
   (custom-set-variables
-   ;; '(ido-everywhere t)
+   '(ido-everywhere t)
 
    '(ido-enable-last-directory-history t)
    '(ido-save-directory-list-file (expand-file-name "ido.last" cfg:var-dir))
@@ -55,7 +55,7 @@
   ;;     (global-set-key (kbd "M-X") #'smex-major-mode-commands)
   ;;
   ;;     ;; This is the old M-x.
-  ;;     (global-set-key (kbd "C-c C-c M-x") 'execute-extended-command)
+  ;;     (global-set-key (kbd "C-c C-c M-x") #'execute-extended-command)
   ;;
   ;;     (eval-after-load "smex"
   ;;       '(progn
@@ -73,7 +73,7 @@
   (require 'recentf)
 
   (custom-set-variables
-   `(recentf-save-file ,(expand-file-name "recentf" cfg:var-dir))
+   '(recentf-save-file (expand-file-name "recentf" cfg:var-dir))
    '(recentf-max-saved-items 50)
    '(recentf-max-menu-items 25))
 
@@ -86,9 +86,9 @@
         (message "Opening file...")
       (message "Aborting")))
 
-  ;; get rid of `find-file-read-only' and replace it with something
+  ;; Get rid of `find-file-read-only' and replace it with something
   ;; more useful.
-  (global-set-key (kbd "C-x C-r") 'cfg:ido-recentf-open))
+  (global-set-key (kbd "C-x C-r") #'cfg:ido-recentf-open))
 
 ;;}}}
 
@@ -98,8 +98,8 @@
 (defun cfg:-setup-ediff ()
   "Setup ediff."
   (custom-set-variables
-   '(ediff-window-setup-function 'ediff-setup-windows-plain)
-   '(ediff-split-window-function 'split-window-horizontally))
+   '(ediff-window-setup-function #'ediff-setup-windows-plain)
+   '(ediff-split-window-function #'split-window-horizontally))
 
   (defun cfg:command-line-diff (switch)
     (let ((file1 (pop command-line-args-left))
@@ -174,7 +174,7 @@
   (cfg:install helm
     ;; The default "C-x c" is quite close to "C-x C-c", which quits Emacs.
     ;; Changed to "C-c h".
-    (global-set-key (kbd "C-c h") 'helm-command-prefix)
+    (global-set-key (kbd "C-c h") #'helm-command-prefix)
     (global-unset-key (kbd "C-x c"))
 
     (cfg:with-local-autoloads
@@ -194,11 +194,11 @@
   ;; Set-up helm-swoop.
   (cfg:install helm-swoop
     (cfg:with-local-autoloads
-      (global-set-key (kbd "M-s o") 'helm-swoop)
-      (global-set-key (kbd "M-s /") 'helm-multi-swoop)
+      (global-set-key (kbd "M-s o") #'helm-swoop)
+      (global-set-key (kbd "M-s /") #'helm-multi-swoop)
 
       ;; When doing isearch, hand the word over to helm-swoop.
-      (define-key isearch-mode-map (kbd "M-i") 'helm-swoop-from-isearch)))
+      (define-key isearch-mode-map (kbd "M-i") #'helm-swoop-from-isearch)))
 
   ;; Set-up helm-projectile.
   (cfg:install helm-projectile
@@ -208,8 +208,10 @@
   (cfg:install helm-ag
     (cfg:with-local-autoloads))
 
-  (eval-after-load "helm" '(cfg:-helm-hook))
-  (eval-after-load "helm-swoop" '(cfg:-helm-swoop-hook)))
+  (with-eval-after-load "helm"
+    (cfg:-helm-hook))
+  (with-eval-after-load "helm-swoop"
+    (cfg:-helm-swoop-hook)))
 
 (defun cfg:-helm-hook ()
   "A hook that is called when helm is loaded."
@@ -281,10 +283,10 @@
     'helm-multi-swoop-all-from-helm-swoop)
 
   ;; Move up and down like isearch.
-  (define-key helm-swoop-map (kbd "C-r") 'helm-previous-line)
-  (define-key helm-swoop-map (kbd "C-s") 'helm-next-line)
-  (define-key helm-multi-swoop-map (kbd "C-r") 'helm-previous-line)
-  (define-key helm-multi-swoop-map (kbd "C-s") 'helm-next-line))
+  (define-key helm-swoop-map (kbd "C-r") #'helm-previous-line)
+  (define-key helm-swoop-map (kbd "C-s") #'helm-next-line)
+  (define-key helm-multi-swoop-map (kbd "C-r") #'helm-previous-line)
+  (define-key helm-multi-swoop-map (kbd "C-s") #'helm-next-line))
 
 ;;}}}
 
@@ -311,7 +313,7 @@
 
     ;; Use `company-complete-selection' instead of `company-complete-common' on
     ;; the Tab key press.
-    (define-key company-active-map (kbd "<tab>") 'company-complete-selection)
+    (define-key company-active-map (kbd "<tab>") #'company-complete-selection)
 
     (global-company-mode))
 
@@ -331,8 +333,8 @@
   "Setup yasnippet."
   (cfg:install yasnippet
     (cfg:with-local-autoloads
-      (eval-after-load "yasnippet"
-        '(yas-reload-all)))))
+      (with-eval-after-load "yasnippet"
+        (yas-reload-all)))))
 
 ;;}}}
 
@@ -347,14 +349,13 @@
     (cfg:install magit
       ;; Magit elisp sources are in the "lisp" subdirectory.
       (let ((default-directory (expand-file-name "lisp" default-directory)))
-        (cfg:with-local-autoloads))))
+        (cfg:with-local-autoloads
+          (global-set-key (kbd "C-c g s") #'magit-status)
+          (global-set-key (kbd "C-c g d") #'magit-dispatch-popup)
 
-  (with-eval-after-load "magit"
-    (custom-set-variables
-     '(magit-process-connection-type nil)))
-
-  (global-set-key (kbd "C-c g s") #'magit-status)
-  (global-set-key (kbd "C-c g d") #'magit-dispatch-popup))
+          (with-eval-after-load "magit"
+            (custom-set-variables
+             '(magit-process-connection-type nil))))))))
 
 ;;}}}
 
