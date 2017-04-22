@@ -151,6 +151,7 @@
        '(:eval (format " prj[%s]" (projectile-project-name))))
      '(projectile-known-projects-file
        (expand-file-name "projectile-bookmarks.eld" cfg:var-dir))
+     '(projectile-cache-file (expand-file-name "projectile.cache" cfg:var-dir))
      '(projectile-use-git-grep nil)  ;; in order to grep in local config files
      )
 
