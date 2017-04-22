@@ -12,7 +12,8 @@
   (cfg:-setup-helm)
   (cfg:-setup-autocompletion)
   (cfg:-setup-yasnippet)
-  (cfg:-setup-magit))
+  (cfg:-setup-magit)
+  (cfg:-setup-ahg))
 
 ;;{{{ Setup ido
 ;; ----------------------------------------------------------------------------
@@ -325,6 +326,16 @@
 
   (global-set-key (kbd "C-c g s") #'magit-status)
   (global-set-key (kbd "C-c g d") #'magit-dispatch-popup))
+
+;;}}}
+
+;;{{{ Setup ahg
+;; ----------------------------------------------------------------------------
+
+(defun cfg:-setup-ahg ()
+  "Setup ahg."
+  (cfg:install ahg
+    (cfg:with-local-autoloads)))
 
 ;;}}}
 
