@@ -8,6 +8,7 @@
   (cfg:-setup-ido)
   (cfg:-setup-recentf)
   (cfg:-setup-ediff)
+  (cfg:-setup-folding)
   (cfg:-setup-projectile)
   (cfg:-setup-helm)
   (cfg:-setup-autocompletion)
@@ -107,6 +108,33 @@
 
   ;; Usage: emacs -diff file1 file2
   (add-to-list 'command-switch-alist '("diff" . cfg:command-line-diff)))
+
+;;}}}
+
+;;{{{ Setup folding
+;; ----------------------------------------------------------------------------
+
+(defun cfg:-setup-folding ()
+  "Setup folding."
+  (cfg:install folding
+    (require 'folding)
+    (folding-mode-add-find-file-hook)
+    (custom-set-variables
+     ;; Enable Folding mode for all known major modes.
+     '(folding-check-folded-file-function
+       (lambda ()
+         (assq major-mode folding-mode-marks-alist)))
+     ;; Don't fold buffers when starting Folding mode.
+     '(folding-folding-on-startup nil)))
+
+  (cfg:install fold-dwim)
+  (add-hook 'folding-mode-hook
+            '(lambda ()
+               (require 'fold-dwim)
+
+               (local-set-key (kbd "C-c f t") #'fold-dwim-toggle)
+               (local-set-key (kbd "C-c f s") #'fold-dwim-show-all)
+               (local-set-key (kbd "C-c f h") #'fold-dwim-hide-all))))
 
 ;;}}}
 
