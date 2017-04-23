@@ -18,7 +18,7 @@
 Start `ielm' if it's not already running."
     (interactive)
     (cfg:start-or-switch-to 'ielm "*ielm*"))
-  (define-key emacs-lisp-mode-map (kbd "C-c C-z") 'cfg:visit-ielm)
+  (define-key emacs-lisp-mode-map (kbd "C-c C-z") #'cfg:visit-ielm)
 
   (add-hook 'emacs-lisp-mode-hook #'cfg:elisp-hook))
 
