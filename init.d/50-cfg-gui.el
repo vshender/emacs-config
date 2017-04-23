@@ -51,6 +51,7 @@
 (defun cfg:-setup-color-theme ()
   "Setup Emacs color theme."
   (cfg:install solarized-emacs
+    (add-to-list 'custom-theme-load-path default-directory)
     (load-theme 'solarized-dark t)
 
     (custom-set-variables

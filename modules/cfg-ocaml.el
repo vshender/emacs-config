@@ -1,11 +1,15 @@
-;;; cfg-ocaml.el --- setting up Emacs for OCaml programming language.  -*- lexical-binding: t -*-
+;;; cfg-ocaml.el --- setting up Emacs for OCaml programming language  -*- lexical-binding: t -*-
 
 ;;; Code:
 
 ;;;###autoload
 (defun cfg:ocaml-module-init ()
   (cfg:install tuareg-mode
-    (cfg:with-local-autoloads)
+    (autoload 'tuareg-mode "tuareg" "Major mode for editing Caml code" t)
+    (autoload 'camldebug "camldebug" "Run the Caml debugger" t)
+    (dolist (ext '(".cmo" ".cmx" ".cma" ".cmxa" ".cmi"))
+      (add-to-list 'completion-ignored-extensions ext))
+    (add-to-list 'auto-mode-alist '("\\.ml[iylp]?" . tuareg-mode))
 
     (eval-after-load "tuareg"
       '(customize-set-variable 'tuareg-prettify-symbols-full t))

@@ -1,9 +1,0 @@
-(:name folding
-       :description "A folding-editor-like minor mode."
-       :type github
-       :pkgname "jaalto/project-emacs--folding-mode"
-       :compile "\\.el$" ; ignore epackage/ subdir
-       ;; The following :prepare action causes an error when using with
-       ;; `cfg:install'.
-       ;; :prepare (folding-mode-add-find-file-hook)
-       )

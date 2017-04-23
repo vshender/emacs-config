@@ -54,7 +54,9 @@
   "Install the given PACKAGE via el-get running an optional after-install HOOK
 forms."
   (declare (indent 1))
-  `(let ((el-get-sources '((:name ,package :after (progn ,@hook)))))
+  `(let ((el-get-sources '((:name ,package
+                            :after (progn ,@hook)
+                            :prepare nil))))
      (el-get 'sync ',package)))
 
 (defmacro cfg:with-local-autoloads (&rest body)
