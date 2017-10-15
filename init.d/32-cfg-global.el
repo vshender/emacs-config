@@ -13,6 +13,7 @@
   (cfg:-setup-helm)
   (cfg:-setup-autocompletion)
   (cfg:-setup-yasnippet)
+  (cfg:-setup-flycheck)
   (cfg:-setup-magit)
   (cfg:-setup-ahg))
 
@@ -335,6 +336,17 @@
     (cfg:with-local-autoloads
       (with-eval-after-load "yasnippet"
         (yas-reload-all)))))
+
+;;}}}
+
+;;{{{ Setup flycheck
+;; ----------------------------------------------------------------------------
+
+(defun cfg:-setup-flycheck ()
+  "Setup flycheck."
+  (cfg:install flycheck
+    (require 'flycheck)
+    (add-hook 'after-init-hook #'global-flycheck-mode)))
 
 ;;}}}
 

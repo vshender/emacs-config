@@ -23,6 +23,7 @@
 (defun cfg:-python-hook ()
   "A hook that is called when python mode is loaded."
   (cfg:setup-jedi)
+  (cfg:setup-flycheck)
 
   (linum-mode)
   (yas-minor-mode))
@@ -83,5 +84,12 @@
 
   (set (make-local-variable 'company-backends)
        '(company-jedi company-files)))
+
+(defun cfg:setup-flycheck ()
+  "Setup flycheck for Python."
+  (let ((venv-path (expand-file-name (cfg:project-venv-name)
+                                     python-environment-directory)))
+    (set (make-local-variable 'flycheck-python-flake8-executable)
+         (expand-file-name "bin/flake8" venv-path))))
 
 ;;; cfg-python.el ends here
