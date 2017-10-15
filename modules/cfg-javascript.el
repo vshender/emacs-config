@@ -40,6 +40,8 @@
   (set (make-local-variable 'company-backends)
        '(company-tern company-files))
 
+  (cfg:setup-flycheck-for-javascript)
+
   (define-key js-mode-map (kbd "C-x C-e") #'nodejs-repl-send-last-sexp)
   (define-key js-mode-map (kbd "C-c C-r") #'nodejs-repl-send-region)
   (define-key js-mode-map (kbd "C-c C-l") #'nodejs-repl-load-file)
@@ -47,5 +49,13 @@
 
   (linum-mode t)
   (yas-minor-mode t))
+
+(defun cfg:setup-flycheck-for-javascript ()
+  "Setup flycheck for JavaScript."
+  (let* ((project-root (projectile-project-root))
+         (eslint-executable (expand-file-name "node_modules/eslint/bin/eslint.js" project-root)))
+    (when (file-exists-p eslint-executable)
+      (set (make-local-variable 'flycheck-javascript-eslint-executable)
+           eslint-executable))))
 
 ;;; cfg-javascript.el ends here
