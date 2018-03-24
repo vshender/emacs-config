@@ -1,4 +1,4 @@
-;;; cfg-web.el  -*- lexical-binding: t -*-
+;;; cfg-web.el --- setting up web-mode  -*- lexical-binding: t -*-
 
 ;;; Code:
 
@@ -31,13 +31,15 @@
            (add-to-list 'web-mode-indentation-params '("lineup-concats" . nil))
            (add-to-list 'web-mode-indentation-params '("lineup-ternary" . nil))))))
 
-  (cfg:install zencoding-mode
+  (cfg:install emmet-mode
     (cfg:with-local-autoloads
-      (add-hook 'sgml-mode-hook #'zencoding-mode)
-      (add-hook 'web-mode-hook #'zencoding-mode)
+      (add-hook 'sgml-mode-hook #'emmet-mode)
+      (add-hook 'web-mode-hook #'emmet-mode)
 
-      (eval-after-load 'zencoding-mode
-        (setq zencoding-indentation 2))))
+      (eval-after-load 'emmet-mode
+        (setq
+         emmet-preview-default t
+         emmet-indentation 2))))
 
   (add-hook 'web-mode-hook #'cfg:-web-hook))
 
@@ -53,18 +55,5 @@
 (defun cfg:-web-hook ()
   "A hook that is called when web mode is loaded."
   (linum-mode t))
-
-
-(define-advice zencoding-insert-and-flash
-    (:around (orig-fun &rest args) move-point-inside-inserted-markup)
-  "Move the point inside the just inserted by zencoding HTML markup."
-  (save-excursion
-    (apply orig-fun args))
-  (re-search-forward ">\\(\n[[:blank:]]*\\)?</")
-  (search-backward ">")
-  (forward-char)
-  (when (= (char-after) ?\n)
-    (insert "\n")
-    (indent-for-tab-command)))
 
 ;;; cfg-web.el ends here
