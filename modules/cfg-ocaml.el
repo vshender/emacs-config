@@ -8,12 +8,14 @@
   (cfg:install tuareg-mode
     (autoload 'tuareg-mode "tuareg" "Major mode for editing Caml code" t)
     (autoload 'camldebug "camldebug" "Run the Caml debugger" t)
+
     (dolist (ext '(".cmo" ".cmx" ".cma" ".cmxa" ".cmi"))
       (add-to-list 'completion-ignored-extensions ext))
-    (add-to-list 'auto-mode-alist '("\\.ml[iylp]?" . tuareg-mode))
 
-    (eval-after-load "tuareg"
-      '(customize-set-variable 'tuareg-prettify-symbols-full t))
+    (add-to-list 'auto-mode-alist '("\\.ml[iylp]?\\'" . tuareg-mode))
+
+    (with-eval-after-load 'tuareg
+      (setq tuareg-prettify-symbols-full t))
 
     (add-hook 'tuareg-mode-hook #'cfg:-ocaml-hook))
 
@@ -26,8 +28,8 @@
       (autoload 'utop-minor-mode "utop" nil t nil)
       (autoload 'ocp-setup-indent "ocp-indent" nil t nil)
 
-      (custom-set-variables
-       '(utop-command "opam config exec utop -- -emacs")))))
+      (with-eval-after-load 'utop
+        (setq utop-command "opam config exec utop -- -emacs")))))
 
 ;;;###autoload (cfg:auto-module "\\.ml[iylp]?\\'" ocaml)
 
@@ -38,8 +40,8 @@
   (utop-minor-mode t)
   (ocp-setup-indent)
 
-  (set (make-local-variable 'company-backends)
-       '(merlin-company-backend company-capf company-files))
+  (setq-local company-backends
+              '(merlin-company-backend company-files))
 
   (when (functionp 'prettify-symbols-mode)
     (prettify-symbols-mode))

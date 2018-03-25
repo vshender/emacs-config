@@ -5,14 +5,15 @@
 ;;;###autoload
 (defun cfg:java-module-init ()
   "Entry function of java module for the cfg install system."
+  (add-hook 'java-mode-hook #'cfg:-java-mode-hook)
+
   (cfg:install meghanada
-    (cfg:with-local-autoloads)
+    (cfg:with-local-autoloads
+      (with-eval-after-load 'meghanada
+        (setq meghanada-server-install-dir
+              (expand-file-name "meghanada" cfg:var-dir)))
 
-    (with-eval-after-load "meghanada"
-      (customize-set-variable 'meghanada-server-install-dir
-                              (expand-file-name "meghanada" cfg:var-dir))))
-
-  (add-hook 'java-mode-hook 'cfg:-java-mode-hook))
+      (add-hook 'java-mode-hook #'meghanada-mode))))
 
 ;;;###autoload (cfg:auto-module "\\.java$" java)
 
@@ -21,10 +22,8 @@
   "A hook that is called when java mode is loaded."
   (setq c-basic-offset 2)
 
-  (meghanada-mode t)
-  (setq company-backends
-        '((company-meghanada :with company-dabbrev-code)
-          company-files))
+  (setq-local company-backends
+              '(company-meghanada company-files))
 
   (linum-mode t)
   (yas-minor-mode t))
