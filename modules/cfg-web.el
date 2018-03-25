@@ -14,22 +14,23 @@
       (add-to-list 'auto-mode-alist '("\\.html.j2\\'" . web-mode))
       (add-to-list 'auto-mode-alist '("\\.html.mustache\\'" . web-mode))
 
-      (eval-after-load 'web-mode
-        '(progn
-           (setq
-            web-mode-markup-indent-offset 2
-            web-mode-code-indent-offset 2
-            web-mode-css-indent-offset 2
+      (with-eval-after-load 'web-mode
+        (setq
+         web-mode-markup-indent-offset 2
+         web-mode-code-indent-offset 2
+         web-mode-css-indent-offset 2
 
-            web-mode-script-padding 2
-            web-mode-style-padding 2
+         web-mode-script-padding 2
+         web-mode-style-padding 2
 
-            web-mode-enable-current-column-highlight t)
+         web-mode-enable-current-column-highlight t)
 
-           (add-to-list 'web-mode-indentation-params '("lineup-args" . nil))
-           (add-to-list 'web-mode-indentation-params '("lineup-calls" . nil))
-           (add-to-list 'web-mode-indentation-params '("lineup-concats" . nil))
-           (add-to-list 'web-mode-indentation-params '("lineup-ternary" . nil))))))
+        (add-to-list 'web-mode-indentation-params '("lineup-args" . nil))
+        (add-to-list 'web-mode-indentation-params '("lineup-calls" . nil))
+        (add-to-list 'web-mode-indentation-params '("lineup-concats" . nil))
+        (add-to-list 'web-mode-indentation-params '("lineup-ternary" . nil)))
+
+      (add-hook 'web-mode-hook #'cfg:-web-hook)))
 
   (cfg:install emmet-mode
     (cfg:with-local-autoloads
@@ -39,9 +40,7 @@
       (eval-after-load 'emmet-mode
         (setq
          emmet-preview-default t
-         emmet-indentation 2))))
-
-  (add-hook 'web-mode-hook #'cfg:-web-hook))
+         emmet-indentation 2)))))
 
 ;;;###autoload (cfg:auto-module "\\.\\(xml\\|x?html?\\)\\'" web)
 ;;;###autoload (cfg:auto-module "\\.djhtml\\'" web)

@@ -26,20 +26,20 @@
   (el-get 'sync))
 
 
-(custom-set-variables
+(setq
  ;; Enable git shallow clone to save time and bandwidth.
- '(el-get-git-shallow-clone t)
+ el-get-git-shallow-clone t
 
  ;; Tell el-get to look for local customizations for every package into
  ;; `~/.emacs.d/init-<package>.el'
- '(el-get-user-package-directory user-emacs-directory)
+ el-get-user-package-directory user-emacs-directory
 
  ;; Make the el-get logging verbose.
  ;; WARNING: makes init slower.
- ;; '(el-get-verbose t)
+ ;; el-get-verbose t
 
  ;; Turn them for core modules off.
- '(el-get-use-autoloads nil))
+ el-get-use-autoloads nil)
 
 ;; Sometimes, we need to experiment with our own recipe, or override the
 ;; default el-get recipe to get around bugs.

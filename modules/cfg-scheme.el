@@ -5,6 +5,8 @@
 ;;;###autoload
 (defun cfg:scheme-module-init ()
   "Entry function of scheme module for the cfg init system."
+  (add-hook 'scheme-mode-hook #'cfg:-scheme-hook)
+
   (cfg:install geiser
     ;; Geiser elisp sources are in the "elisp" subdirectory.
     (let ((default-directory (expand-file-name "elisp" default-directory)))
@@ -20,8 +22,8 @@
   "A hook that is called when scheme mode is loaded."
   (setq geiser-active-implementations '(racket guile))
 
-  (set (make-local-variable 'company-backends)
-       '(geiser-company-backend company-files))
+  (setq-local company-backends
+              '(geiser-company-backend company-files))
 
   (linum-mode t)
   (yas-minor-mode t))

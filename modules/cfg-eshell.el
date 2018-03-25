@@ -5,9 +5,9 @@
 ;;;###autoload
 (defun cfg:eshell-module-init ()
   "Entry function of eshell module for the cfg init system."
-  (with-eval-after-load "eshell"
-    (customize-set-variable 'eshell-directory-name
-                            (expand-file-name "eshell" cfg:var-dir))))
+  (with-eval-after-load 'eshell
+    (setq eshell-directory-name
+          (expand-file-name "eshell" cfg:var-dir))))
 
 ;;;###autoload (cfg:eshell-module-init)
 

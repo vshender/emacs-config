@@ -15,7 +15,7 @@
   "Setup basic GUI for Emacs."
 
   ;; No splash screen on startup.
-  (customize-set-variable 'inhibit-startup-screen t)
+  (setq inhibit-startup-screen t)
 
   ;; We don't need menubar (execpt OSX), toolbar nor scrollbar.
   (when (and (fboundp 'menu-bar-mode)
@@ -37,7 +37,16 @@
 
   ;; Increase splitting minimum height in order to prevent splitting a window
   ;; vertically.
-  (customize-set-variable 'split-height-threshold 255))
+  (setq split-height-threshold 255)
+
+  ;; Don't beep, just subtly flash the modeline on alarms.
+  (setq ring-bell-function
+    (lambda ()
+      (let ((orig-fg (face-foreground 'mode-line)))
+        (set-face-foreground 'mode-line "#F2804F")
+        (run-with-idle-timer 0.1 nil
+                 (lambda (fg) (set-face-foreground 'mode-line fg))
+                 orig-fg)))))
 
 (defun cfg:-setup-diminish ()
   "Setup minor modes diminishing."
@@ -54,9 +63,9 @@
     (add-to-list 'custom-theme-load-path default-directory)
     (load-theme 'solarized-dark t)
 
-    (custom-set-variables
-     '(solarized-high-contrast-mode-line nil)
-     '(solarized-use-less-bold t))))
+    (setq
+     solarized-high-contrast-mode-line nil
+     solarized-use-less-bold t)))
 
 (defun cfg:-setup-font ()
   (when (eq system-type 'darwin)

@@ -7,8 +7,7 @@
   "Entry function of python module for the cfg init system."
   (cfg:install python-environment
     (require 'python-environment)
-    (custom-set-variables
-     '(python-environment-directory "~/.virtualenvs")))
+    (setq python-environment-directory "~/.virtualenvs"))
 
   (cfg:install company-jedi
     (cfg:with-local-autoloads)
@@ -48,9 +47,9 @@
 
 (defun cfg:setup-jedi ()
   "Setup jedi."
-  (set (make-local-variable 'jedi:environment-root)
-       (format "~/.emacs.d/.python-environments/py%d"
-               (cfg:project-venv-py-version)))
+  (setq-local jedi:environment-root
+              (format "~/.emacs.d/.python-environments/py%d"
+                      (cfg:project-venv-py-version)))
 
   ;; Install jediepcserver if it's not installed yet.
   (let ((jediepcserver-path (expand-file-name "bin/jediepcserver"
@@ -71,25 +70,25 @@
       (while (not (file-exists-p jediepcserver-path))
         (sleep-for 0 100))))
 
-  (set (make-local-variable 'jedi:server-command)
-       (list (expand-file-name "bin/python" jedi:environment-root)
-             (expand-file-name "bin/jediepcserver" jedi:environment-root)))
-  (set (make-local-variable 'jedi:server-args)
-       (list "--virtual-env" (expand-file-name (cfg:project-venv-name)
-                                               python-environment-directory)))
+  (setq-local jedi:server-command
+              (list (expand-file-name "bin/python" jedi:environment-root)
+                    (expand-file-name "bin/jediepcserver" jedi:environment-root)))
+  (setq-local jedi:server-args
+              (list "--virtual-env" (expand-file-name (cfg:project-venv-name)
+                                                      python-environment-directory)))
 
   (message "CFG: enable Jedi from %s venv"
            (file-name-nondirectory jedi:environment-root))
   (jedi:setup)
 
-  (set (make-local-variable 'company-backends)
-       '(company-jedi company-files)))
+  (setq-local company-backends
+              '(company-jedi company-files)))
 
 (defun cfg:setup-flycheck-for-python ()
   "Setup flycheck for Python."
   (let ((venv-path (expand-file-name (cfg:project-venv-name)
                                      python-environment-directory)))
-    (set (make-local-variable 'flycheck-python-flake8-executable)
-         (expand-file-name "bin/flake8" venv-path))))
+    (setq-local flycheck-python-flake8-executable
+                (expand-file-name "bin/flake8" venv-path))))
 
 ;;; cfg-python.el ends here

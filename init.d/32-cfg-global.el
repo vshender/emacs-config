@@ -24,24 +24,23 @@
   "Setup Interactive Do."
   (require 'ido)
 
-  (custom-set-variables
-   '(ido-everywhere t)
+  (setq
+   ido-everywhere t
 
-   '(ido-enable-last-directory-history t)
-   '(ido-save-directory-list-file (expand-file-name "ido.last" cfg:var-dir))
+   ido-enable-last-directory-history t
+   ido-save-directory-list-file (expand-file-name "ido.last" cfg:var-dir)
 
-   '(ido-enable-flex-matching t)
-   '(ido-enable-prefix nil)
-   '(ido-enable-case nil)
+   ido-enable-flex-matching t
+   ido-enable-prefix nil
+   ido-enable-case nil
 
-   '(ido-ignore-extensions t)
+   ido-ignore-extensions t
 
-   '(ido-create-new-buffer 'always)
-   '(ido-use-filename-at-point nil)
-   '(ido-auto-merge-work-directories-length -1))
+   ido-create-new-buffer 'always
+   ido-use-filename-at-point nil
+   ido-auto-merge-work-directories-length -1)
 
-  (customize-set-variable
-   'ido-file-extensions-order '(".yml" ".yaml" ".retry"))
+  (setq ido-file-extensions-order '(".yml" ".yaml" ".retry"))
   (add-to-list 'completion-ignored-extensions ".retry")
 
   (ido-mode t)
@@ -58,10 +57,8 @@
   ;;     ;; This is the old M-x.
   ;;     (global-set-key (kbd "C-c C-c M-x") #'execute-extended-command)
   ;;
-  ;;     (eval-after-load "smex"
-  ;;       '(progn
-  ;;          (customize-set-variable
-  ;;           'smex-save-file (expand-file-name "smex.hist" cfg:var-dir))))))
+  ;;     (with-eval-after-load 'smex
+  ;;       (setq smex-save-file (expand-file-name "smex.hist" cfg:var-dir)))))
   )
 
 ;;}}}
@@ -73,10 +70,10 @@
   "Setup recentf."
   (require 'recentf)
 
-  (custom-set-variables
-   '(recentf-save-file (expand-file-name "recentf" cfg:var-dir))
-   '(recentf-max-saved-items 50)
-   '(recentf-max-menu-items 25))
+  (setq
+   recentf-save-file (expand-file-name "recentf" cfg:var-dir)
+   recentf-max-saved-items 50
+   recentf-max-menu-items 25)
 
   (recentf-mode t)
 
@@ -98,9 +95,9 @@
 
 (defun cfg:-setup-ediff ()
   "Setup ediff."
-  (custom-set-variables
-   '(ediff-window-setup-function #'ediff-setup-windows-plain)
-   '(ediff-split-window-function #'split-window-horizontally))
+  (setq
+   ediff-window-setup-function #'ediff-setup-windows-plain
+   ediff-split-window-function #'split-window-horizontally)
 
   (defun cfg:command-line-diff (switch)
     (let ((file1 (pop command-line-args-left))
@@ -120,22 +117,24 @@
   (cfg:install folding
     (require 'folding)
     (folding-mode-add-find-file-hook)
-    (custom-set-variables
+    (setq
      ;; Enable Folding mode for all known major modes.
-     '(folding-check-folded-file-function
-       (lambda ()
-         (assq major-mode folding-mode-marks-alist)))
+     folding-check-folded-file-function
+     (lambda ()
+       (assq major-mode folding-mode-marks-alist))
+
      ;; Don't fold buffers when starting Folding mode.
-     '(folding-folding-on-startup nil)))
+     folding-folding-on-startup nil))
 
-  (cfg:install fold-dwim)
-  (add-hook 'folding-mode-hook
-            '(lambda ()
-               (require 'fold-dwim)
+  (cfg:install fold-dwim
+    (require 'fold-dwim)
+    (add-hook 'folding-mode-hook
+              (lambda ()
+                (require 'fold-dwim)
 
-               (local-set-key (kbd "C-c f t") #'fold-dwim-toggle)
-               (local-set-key (kbd "C-c f s") #'fold-dwim-show-all)
-               (local-set-key (kbd "C-c f h") #'fold-dwim-hide-all))))
+                (local-set-key (kbd "C-c f t") #'fold-dwim-toggle)
+                (local-set-key (kbd "C-c f s") #'fold-dwim-show-all)
+                (local-set-key (kbd "C-c f h") #'fold-dwim-hide-all)))))
 
 ;;}}}
 
@@ -147,17 +146,16 @@
   (cfg:install projectile
     (require 'projectile)
 
-    (custom-set-variables
-     '(projectile-mode-line
-       '(:eval (format " prj[%s]" (projectile-project-name))))
-     '(projectile-known-projects-file
-       (expand-file-name "projectile-bookmarks.eld" cfg:var-dir))
-     '(projectile-cache-file (expand-file-name "projectile.cache" cfg:var-dir))
-     '(projectile-use-git-grep nil)  ;; in order to grep in local config files
+    (setq
+     projectile-mode-line '(:eval (format " prj[%s]" (projectile-project-name)))
+     projectile-known-projects-file (expand-file-name
+                                     "projectile-bookmarks.eld" cfg:var-dir)
+     projectile-cache-file (expand-file-name "projectile.cache" cfg:var-dir)
+     projectile-use-git-grep nil  ;; in order to grep in local config files
      )
 
-    (customize-set-variable 'projectile-globally-ignored-file-suffixes
-                            '(".png" ".jpg" ".gif" ".svg" ".ico"))
+    (setq projectile-globally-ignored-file-suffixes
+          '(".png" ".jpg" ".gif" ".svg" ".ico"))
 
     (projectile-mode t))
 
@@ -173,12 +171,12 @@
 (defun cfg:-setup-helm ()
   "Setup helm."
   (cfg:install helm
-    ;; The default "C-x c" is quite close to "C-x C-c", which quits Emacs.
-    ;; Changed to "C-c h".
-    (global-set-key (kbd "C-c h") #'helm-command-prefix)
-    (global-unset-key (kbd "C-x c"))
-
     (cfg:with-local-autoloads
+      ;; The default "C-x c" is quite close to "C-x C-c", which quits Emacs.
+      ;; Changed to "C-c h".
+      (global-set-key (kbd "C-c h") #'helm-command-prefix)
+      (global-unset-key (kbd "C-x c"))
+
       ;;(global-set-key (kbd "C-x C-f") #'helm-find-files)
       (global-set-key (kbd "s-f")     #'helm-find-files)
       (global-set-key (kbd "C-x C-r") #'helm-recentf)
@@ -209,9 +207,9 @@
   (cfg:install helm-ag
     (cfg:with-local-autoloads))
 
-  (with-eval-after-load "helm"
+  (with-eval-after-load 'helm
     (cfg:-helm-hook))
-  (with-eval-after-load "helm-swoop"
+  (with-eval-after-load 'helm-swoop
     (cfg:-helm-swoop-hook)))
 
 (defun cfg:-helm-hook ()
@@ -224,29 +222,29 @@
   ;; List actions using C-z.
   (define-key helm-map (kbd "C-z") #'helm-select-action)
 
-  (custom-set-variables
+  (setq
    ;; Open helm buffer inside current window, not occupy whole other window.
-   '(helm-split-window-in-side-p t)
+   helm-split-window-inside-p t
    ;; Show current input in header-line of Helm buffer.
-   '(helm-echo-input-in-header-line t)
+   helm-echo-input-in-header-line t
    ;; Move to end or beginning of source when reaching top or bottom of source.
    ;;'(helm-move-to-line-cycle-in-source t)
 
    ;; Search for library in `require' and `declare-function' sexp.
-   '(helm-ff-search-library-in-sexp t)
+   helm-ff-search-library-in-sexp t
    ;; Scroll 8 lines when scrolling other window using M-<next>/M-<prior>.
-   '(helm-scroll-amount 8)
+   helm-scroll-amount 8
 
    ;; Use `recentf-list' instead of `file-name-history' during file opening.
-   '(helm-ff-file-name-history-use-recentf t)
+   helm-ff-file-name-history-use-recentf t
 
    ;; Enable fuzzy matching.
-   '(helm-buffers-fuzzy-matching t)
-   '(helm-recentf-fuzzy-match    t)
-   '(helm-semantic-fuzzy-match   t)
-   '(helm-imenu-fuzzy-match      t)
-   '(helm-M-x-fuzzy-match        t)
-   '(helm-lisp-fuzzy-completion  t))
+   helm-buffers-fuzzy-matching t
+   helm-recentf-fuzzy-match    t
+   helm-semantic-fuzzy-match   t
+   helm-imenu-fuzzy-match      t
+   helm-M-x-fuzzy-match        t
+   helm-lisp-fuzzy-completion  t)
 
   (defun cfg:helm-hide-minibuffer-maybe ()
     "Hide minibuffer in Helm session if we use the header line as input field."
@@ -261,21 +259,21 @@
   (add-hook 'helm-minibuffer-set-up-hook #'cfg:helm-hide-minibuffer-maybe)
 
   (when (executable-find "curl")
-    (customize-set-variable 'helm-net-prefer-curl t))
+    (setq helm-net-prefer-curl t))
 
-  ;; (custom-set-variables
+  ;; (setq
   ;;  ;; Limit the window height (works with autoresize-mode).
-  ;;  '(helm-autoresize-min-height 15)
-  ;;  '(helm-autoresize-max-height 40))
+  ;;  helm-autoresize-min-height 15
+  ;;  helm-autoresize-max-height 40)
   ;; (helm-autoresize-mode t)
 
   (helm-mode t)
 
   (helm-projectile-on)
 
-  (custom-set-variables
-   '(projectile-completion-system #'helm)
-   '(projectile-switch-project-action #'helm-projectile)))
+  (setq
+   projectile-completion-system #'helm
+   projectile-switch-project-action #'helm-projectile))
 
 (defun cfg:-helm-swoop-hook ()
   "A hook that is called when helm-swoop is loaded."
@@ -300,17 +298,18 @@
   (cfg:install company-mode
     (require 'company)
 
-    (custom-set-variables
-     '(company-dabbrev-ignore-case t)
-     '(company-dabbrev-code-ignore-case t)
-     '(company-dabbrev-downcase nil)
-     '(company-minimum-prefix-length 2)
+    (setq
+     company-dabbrev-ignore-case t
+     company-dabbrev-code-ignore-case t
+     company-dabbrev-downcase nil
+     company-minimum-prefix-length 2)
 
+    (setq-default
      ;; Something universally applied.
-     '(company-backends '((company-capf
-                           :with company-dabbrev-code company-keywords)
-                          company-files
-                          company-dabbrev)))
+     company-backends '((company-capf
+                         :with company-dabbrev-code company-keywords)
+                        company-files
+                        company-dabbrev))
 
     ;; Use `company-complete-selection' instead of `company-complete-common' on
     ;; the Tab key press.
@@ -334,7 +333,7 @@
   "Setup yasnippet."
   (cfg:install yasnippet
     (cfg:with-local-autoloads
-      (with-eval-after-load "yasnippet"
+      (with-eval-after-load 'yasnippet
         (yas-reload-all)))))
 
 ;;}}}
@@ -365,9 +364,8 @@
           (global-set-key (kbd "C-c g s") #'magit-status)
           (global-set-key (kbd "C-c g d") #'magit-dispatch-popup)
 
-          (with-eval-after-load "magit"
-            (custom-set-variables
-             '(magit-process-connection-type nil))))))))
+          (with-eval-after-load 'magit
+            (setq magit-process-connection-type nil)))))))
 
 ;;}}}
 

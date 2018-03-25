@@ -6,11 +6,10 @@
 (defun cfg:golang-module-init ()
   "Entry function of golang module for the cfg init system."
   (cfg:install go-mode
-    (cfg:with-local-autoloads))
+    (cfg:with-local-autoloads
+      (add-hook 'go-mode-hook #'cfg:-golang-hook)))
 
-  (cfg:install go-company)
-
-  (add-hook 'go-mode-hook #'cfg:-golang-hook))
+  (cfg:install go-company))
 
 ;;;###autoload (cfg:auto-module "\\.go\\'" golang)
 
@@ -34,14 +33,14 @@
   (local-set-key (kbd "C-c i r") #'go-remove-unused-imports)
   (local-set-key (kbd "C-c i g") #'go-goto-imports)
 
-  (set (make-local-variable 'company-backends)
-       '(company-go company-capf company-files))
+  (setq-local company-backends
+              '(company-go company-files))
 
-  (add-hook 'before-save-hook #'gofmt-before-save)
+  (add-hook 'before-save-hook #'gofmt-before-save nil t)
 
   (if (not (string-match "go" compile-command))
-      (set (make-local-variable 'compile-command)
-           "go build -v && go test -v && go vet"))
+      (setq-local compile-command
+                  "go build -v && go test -v && go vet"))
 
   (linum-mode t)
   (yas-minor-mode t))
