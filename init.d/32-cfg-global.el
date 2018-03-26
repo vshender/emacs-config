@@ -334,7 +334,13 @@
   (cfg:install yasnippet
     (cfg:with-local-autoloads
       (with-eval-after-load 'yasnippet
-        (yas-reload-all)))))
+        (yas-reload-all))))
+
+  (cfg:install yasnippet-snippets
+    (setq yas-snippet-dirs
+          (list
+           (expand-file-name "el-get/yasnippet-snippets/snippets"
+                             user-emacs-directory)))))
 
 ;;}}}
 
