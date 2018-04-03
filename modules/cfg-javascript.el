@@ -7,7 +7,7 @@
   "Entry function of javascript module for the cfg init system."
   (cfg:install js2-mode
     (cfg:with-local-autoloads
-      (add-to-list 'auto-mode-alist '("\\.js[mx]?\\'" . js2-mode))
+      (add-to-list 'auto-mode-alist '("\\.jsm?\\'" . js2-mode))
 
       (with-eval-after-load 'js2-mode
         (setq
@@ -18,6 +18,10 @@
 
       (add-hook 'js2-mode-hook #'cfg:-javascript-hook)))
 
+  (cfg:install rjsx-mode
+    (cfg:with-local-autoloads
+      (add-to-list 'auto-mode-alist '("\\.jsx\\'" . rjsx-mode))
+      (add-to-list 'auto-mode-alist '("components\\/.*\\.js\\'" . rjsx-mode))))
 
   (cfg:install tern
     ;; Tern elisp sources are in the "emacs" subdirectory.
@@ -56,7 +60,10 @@
   (let* ((project-root (projectile-project-root))
          (eslint-executable (expand-file-name "node_modules/eslint/bin/eslint.js" project-root)))
     (when (file-exists-p eslint-executable)
-      (setq-local flycheck-javascript-eslint-executable
-                  eslint-executable))))
+      (setq-local flycheck-javascript-eslint-executable eslint-executable)
+
+      ;; eslint utility is available, so disable js2-mode errors highlighting.
+      (setq-local js2-mode-show-parse-errors nil)
+      (setq-local js2-mode-show-strict-warnings nil))))
 
 ;;; cfg-javascript.el ends here
