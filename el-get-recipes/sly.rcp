@@ -1,0 +1,4 @@
+(:name sly
+       :description "Sylvester the Cat's Common Lisp IDE"
+       :type github
+       :pkgname "joaotavora/sly")
