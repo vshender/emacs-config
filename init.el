@@ -16,9 +16,14 @@
 ;;{{{ Config directories setup
 ;; ----------------------------------------------------------------------------
 
-(defvar cfg:plugin-dir (expand-file-name "plugins" user-emacs-directory)
+(defconst cfg:init-dir (expand-file-name "init.d" user-emacs-directory)
+  "Directory for core Emacs configuration.")
+(defconst cfg:module-dir (expand-file-name "modules" user-emacs-directory)
+  "Directory for extension modules.")
+
+(defconst cfg:plugin-dir (expand-file-name "plugins" user-emacs-directory)
   "Directory for static plugins, i.e. not installed with el-get.")
-(defvar cfg:var-dir (expand-file-name "var" user-emacs-directory)
+(defconst cfg:var-dir (expand-file-name "var" user-emacs-directory)
   "Data directory, mainly for generated stuff, caches, state data, etc.")
 
 (unless (file-directory-p cfg:plugin-dir)
@@ -71,12 +76,11 @@ Configuration module is either init script or extension module.")
 
 ;; Load core initialization scripts from init.d directory.
 (cfg:run-cfg-modules
- (directory-files (expand-file-name "init.d" user-emacs-directory)
-                  t cfg:init-script-regexp))
+ (directory-files cfg:init-dir t cfg:init-script-regexp))
 
 ;;}}}
 
-;;{{{ Additional modules loading
+;;{{{ Extensions modules autoloading
 ;; ----------------------------------------------------------------------------
 
 ;; Extension modules are usually corresponding to the specific emacs
@@ -112,20 +116,29 @@ module."
 
 ;;; Load all modules for the first time triggering el-get to install all stuff
 ;;; we need; for the subsequent runs the generated autoloads will be picked-up.
+
 (require 'autoload)
 
-(let ((cfg:module-dir (expand-file-name "modules" user-emacs-directory))
-      (generated-autoload-file (expand-file-name "loaddefs.el" cfg:var-dir)))
+(defconst cfg:modules-autoload-file (expand-file-name "loaddefs.el" cfg:var-dir)
+  "File containing modules autoload definitions.")
+
+(defun cfg:generate-modules-autoloads ()
+  "Update autoload definitions for extension modules."
+  (interactive)
+
   ;; Directory containing autoloads should be included because loaddefs has
   ;; relative paths.
-  (add-to-list 'load-path cfg:var-dir)
+  (add-to-list 'load-path (file-name-directory cfg:modules-autoload-file))
 
-  (if (file-exists-p generated-autoload-file)
-      ;; Already been there, just load loaddefs.
-      (load-file generated-autoload-file)
-    ;; Making the first run, churn up all modules to trigger el-get installs.
+  (let ((generated-autoload-file cfg:modules-autoload-file))
     (cfg:run-cfg-modules (directory-files cfg:module-dir t))
     (update-directory-autoloads cfg:module-dir)))
+
+(if (file-exists-p cfg:modules-autoload-file)
+    ;; Already been there, just load loaddefs.
+    (load-file cfg:modules-autoload-file)
+  ;; Making the first run, churn up all modules to trigger el-get installs.
+  (cfg:generate-modules-autoloads))
 
 ;;}}}
 
