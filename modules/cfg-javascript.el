@@ -23,13 +23,16 @@
       (add-to-list 'auto-mode-alist '("\\.jsx\\'" . rjsx-mode))
       (add-to-list 'auto-mode-alist '("components\\/.*\\.js\\'" . rjsx-mode))))
 
-  (cfg:install tern
-    ;; Tern elisp sources are in the "emacs" subdirectory.
-    (let ((default-directory (expand-file-name "emacs" default-directory)))
-      (cfg:with-local-autoloads
-        (add-hook 'js2-mode-hook #'tern-mode))))
-  (cfg:install company-tern
-    (cfg:with-local-autoloads))
+  (cfg:install tide
+    ;; Load tide immediately because we're going to patch
+    ;; `tide-annotate-completion' function.
+    (require 'tide)
+
+    (setq tide-sync-request-timeout 10
+          tide-completion-ignore-case t
+          tide-default-mode "JS")
+
+    (add-hook 'js-mode-hook #'tide-setup))
 
   (cfg:install nodejs-repl
     (cfg:with-local-autoloads)))
@@ -41,12 +44,17 @@
   "A hook that is called when js2 mode is loaded."
   (setq mode-name "js2")
 
+  (setq-local tide-filter-out-warning-completions t)
+
   (setq-local company-backends
-              '(company-tern company-files))
+              '(company-tide company-files))
 
   (cfg:setup-flycheck-for-javascript)
 
-  (define-key js-mode-map (kbd "C-x C-e") #'nodejs-repl-send-last-sexp)
+  (define-key js-mode-map (kbd "M-?") #'tide-references)
+  (define-key js-mode-map (kbd "C-c d") #'tide-documentation-at-point)
+
+  (define-key js-mode-map (kbd "C-x C-e") #'nodejs-repl-send-last-expression)
   (define-key js-mode-map (kbd "C-c C-r") #'nodejs-repl-send-region)
   (define-key js-mode-map (kbd "C-c C-l") #'nodejs-repl-load-file)
   (define-key js-mode-map (kbd "C-c C-z") #'nodejs-repl-switch-to-repl)
