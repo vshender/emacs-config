@@ -53,6 +53,6 @@
 
 (defun cfg:-web-hook ()
   "A hook that is called when web mode is loaded."
-  (linum-mode t))
+  (display-line-numbers-mode t))
 
 ;;; cfg-web.el ends here

@@ -22,7 +22,7 @@
 
 (defun cfg:elisp-hook ()
   "A hook that is called when Emacs Lisp mode is loaded."
-  (linum-mode t)
+  (display-line-numbers-mode t)
   (yas-minor-mode t))
 
 
