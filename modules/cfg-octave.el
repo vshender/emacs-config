@@ -16,7 +16,7 @@
   "A hook that is called when octave mode is loaded."
   (local-set-key (kbd "C-c C-z") #'run-octave)
 
-  (linum-mode t)
+  (display-line-numbers-mode t)
   (yas-minor-mode t))
 
 ;;; cfg-octave.el ends here

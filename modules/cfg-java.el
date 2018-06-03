@@ -25,7 +25,7 @@
   (setq-local company-backends
               '(company-meghanada company-files))
 
-  (linum-mode t)
+  (display-line-numbers-mode t)
   (yas-minor-mode t))
 
 ;;; cfg-java.el ends here

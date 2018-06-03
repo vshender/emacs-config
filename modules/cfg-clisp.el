@@ -23,7 +23,6 @@
 
 (defun cfg:-clisp-hook ()
   "A hook that is called when Lisp mode is loaded."
-
-  (linum-mode t))
+  (display-line-numbers-mode t))
 
 ;;; cfg-clisp.el ends here

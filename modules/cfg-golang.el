@@ -42,7 +42,7 @@
       (setq-local compile-command
                   "go build -v && go test -v && go vet"))
 
-  (linum-mode t)
+  (display-line-numbers-mode t)
   (yas-minor-mode t))
 
 ;;; cfg-golang.el ends here

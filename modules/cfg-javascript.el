@@ -59,7 +59,7 @@
   (define-key js-mode-map (kbd "C-c C-l") #'nodejs-repl-load-file)
   (define-key js-mode-map (kbd "C-c C-z") #'nodejs-repl-switch-to-repl)
 
-  (linum-mode t)
+  (display-line-numbers-mode t)
   (yas-minor-mode t))
 
 

@@ -24,8 +24,8 @@
   (cfg:setup-jedi)
   (cfg:setup-flycheck-for-python)
 
-  (linum-mode)
-  (yas-minor-mode))
+  (display-line-numbers-mode t)
+  (yas-minor-mode t))
 
 
 (defun cfg:project-venv-name ()

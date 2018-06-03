@@ -46,7 +46,7 @@
   (when (functionp 'prettify-symbols-mode)
     (prettify-symbols-mode))
 
-  (linum-mode t)
+  (display-line-numbers-mode t)
   (yas-minor-mode t))
 
 ;;; cfg-ocaml.ml ends here
