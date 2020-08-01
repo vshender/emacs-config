@@ -4,16 +4,25 @@
 
 ;;;###autoload
 (defun cfg:java-module-init ()
-  "Entry function of java module for the cfg install system."
-  (add-hook 'java-mode-hook #'cfg:-java-mode-hook)
+  "Entry function of java module for the cfg init system."
 
-  (cfg:install meghanada
-    (cfg:with-local-autoloads
-      (with-eval-after-load 'meghanada
-        (setq meghanada-server-install-dir
-              (expand-file-name "meghanada" cfg:var-dir)))
+  (cfg:install lsp-ui
+    (require 'lsp-ui)
+    (add-hook 'java-mode-hook #'lsp-ui-mode)
 
-      (add-hook 'java-mode-hook #'meghanada-mode))))
+    (setq lsp-ui-flycheck-enable t
+          lsp-ui-sideline-enable t))
+
+  (cfg:install lsp-java
+    (require 'lsp-java)
+    (require 'lsp-modeline)
+    (add-hook 'java-mode-hook #'lsp))
+
+  (cfg:install company-lsp
+    (cfg:with-local-autoloads))
+
+  (add-hook 'java-mode-hook #'cfg:-java-mode-hook))
+
 
 ;;;###autoload (cfg:auto-module "\\.java$" java)
 
@@ -23,7 +32,12 @@
   (setq c-basic-offset 2)
 
   (setq-local company-backends
-              '(company-meghanada company-files))
+              '(company-lsp company-files))
+
+  (define-key lsp-ui-mode-map
+    [remap xref-find-definitions] #'lsp-ui-peek-find-definitions)
+  (define-key lsp-ui-mode-map
+    [remap xref-find-references] #'lsp-ui-peek-find-references)
 
   (display-line-numbers-mode t)
   (yas-minor-mode t))
