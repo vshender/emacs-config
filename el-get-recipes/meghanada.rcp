@@ -1,5 +1,0 @@
-(:name meghanada
-       :description "A Better Java Development Environment for Emacs"
-       :type github
-       :pkgname "mopemope/meghanada-emacs"
-       :depends (yasnippet company-mode flycheck))
