@@ -20,7 +20,7 @@
       (autoload 'imath-mode "imath" "Imath mode for math formula input" t)
 
       (setq imaxima-use-maxima-mode-flag t)
-      (setq imaxima-fnt-size "Large")
+      (setq imaxima-fnt-size "large")
 
       (add-to-list 'auto-mode-alist '("\\.ma[cx]\\'" . maxima-mode))
 
