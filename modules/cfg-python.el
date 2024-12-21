@@ -24,8 +24,16 @@
   (cfg:setup-jedi)
   (cfg:setup-flycheck-for-python)
 
+  (local-set-key (kbd "M-.") #'jedi:goto-definition)
+  (local-set-key (kbd "M-,") #'jedi:goto-definition-pop-marker)
+
   (display-line-numbers-mode t)
-  (yas-minor-mode t))
+
+  ;; In order to avoid `(void-function yasnippet-snippets--fixed-indent)`
+  (require 'yasnippet-snippets)
+  (yas-minor-mode t)
+
+  (setq-local python-indent-def-block-scale 1))
 
 
 (defun cfg:project-venv-name ()
@@ -47,6 +55,10 @@
 
 (defun cfg:setup-jedi ()
   "Setup jedi."
+  ;; In order to get the definition of `jedi:environment-virtualenv' as a
+  ;; dynamic variable.
+  (require 'jedi-core)
+
   (setq-local jedi:environment-root
               (format "~/.emacs.d/.python-environments/py%d"
                       (cfg:project-venv-py-version)))
@@ -89,6 +101,8 @@
   (let ((venv-path (expand-file-name (cfg:project-venv-name)
                                      python-environment-directory)))
     (setq-local flycheck-python-flake8-executable
-                (expand-file-name "bin/flake8" venv-path))))
+                (expand-file-name "bin/flake8" venv-path))
+    (setq-local flycheck-python-mypy-executable
+                (expand-file-name "bin/mypy" venv-path))))
 
 ;;; cfg-python.el ends here
