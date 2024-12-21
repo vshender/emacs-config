@@ -1,0 +1,6 @@
+(:name geiser-racket
+       :website "http://www.nongnu.org/geiser/"
+       :description "Racket and Geiser talk to each other"
+       :type git
+       :url "https://gitlab.com/emacs-geiser/racket.git"
+       :depends (geiser))
