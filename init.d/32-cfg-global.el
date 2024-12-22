@@ -5,6 +5,7 @@
 (defun cfg:global-module-init ()
   "Entry function of global module for the cfg init system."
 
+  (cfg:-setup-term)
   (cfg:-setup-ido)
   (cfg:-setup-recentf)
   (cfg:-setup-ediff)
@@ -16,6 +17,18 @@
   (cfg:-setup-flycheck)
   (cfg:-setup-magit)
   (cfg:-setup-ahg))
+
+;;{{{ Setup term
+;; ----------------------------------------------------------------------------
+
+(defun cfg:-setup-term ()
+  ;; https://stackoverflow.com/questions/6820051/unicode-characters-in-emacs-term-mode
+  (add-hook 'term-exec-hook
+            (function
+             (lambda ()
+               (set-buffer-process-coding-system 'utf-8-unix 'utf-8-unix)))))
+
+;;}}}
 
 ;;{{{ Setup ido
 ;; ----------------------------------------------------------------------------
