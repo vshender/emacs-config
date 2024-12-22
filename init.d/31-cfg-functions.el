@@ -13,4 +13,14 @@ the current buffer."
         (funcall function))
     (switch-to-buffer-other-window buffer-name)))
 
+
+(defun toggle-letter-accent-utf-8 ()
+  "Toggle accent of the letter before the cursor."
+  (interactive)
+  (if (/= (char-before) #x301)
+      (insert #x301)
+    (delete-char -1)))
+
+(global-set-key (kbd "C-c c a") #'toggle-letter-accent-utf-8)
+
 ;;; 31-cfg-functions.el ends here
