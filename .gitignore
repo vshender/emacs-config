@@ -2,6 +2,11 @@
 .DS_Store
 var
 auto-save-list
+eclipse.jdt.ls
 el-get
 elpa
+workspace
+.cache
+.dap-breakpoints
+.lsp-session*
 .python-environments
