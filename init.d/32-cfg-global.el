@@ -40,8 +40,6 @@
   (require 'ido)
 
   (setq
-   ido-everywhere t
-
    ido-enable-last-directory-history t
    ido-save-directory-list-file (expand-file-name "ido.last" cfg:var-dir)
 
@@ -216,6 +214,10 @@
   "Setup helm."
   (cfg:install helm
     (cfg:with-local-autoloads
+      ;; Use Ido to open files.
+      (eval-after-load 'helm-mode
+        '(add-to-list 'helm-completing-read-handlers-alist '(find-file . ido)))
+
       ;; The default "C-x c" is quite close to "C-x C-c", which quits Emacs.
       ;; Changed to "C-c h".
       (global-set-key (kbd "C-c h") #'helm-command-prefix)
