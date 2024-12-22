@@ -1,6 +1,0 @@
-(:name lsp-metals
-       :description "Emacs Scala IDE using lsp-mode to connect to Metals."
-       :website "https://github.com/emacs-lsp/lsp-metals"
-       :type github
-       :pkgname "emacs-lsp/lsp-metals"
-       :depends (dap-mode dash f ht lsp-mode lsp-treemacs treemacs))
