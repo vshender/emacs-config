@@ -5,16 +5,16 @@
 ;;;###autoload
 (defun cfg:clisp-module-init ()
   "Entry function of clisp module for the cfg init system."
-  (add-hook 'lisp-mode-hook #'cfg:-clisp-hook)
 
   (cfg:install sly
     (cfg:with-local-autoloads
       (setq inferior-lisp-program
-            (case system-type
-              (darwin "/usr/local/bin/sbcl")
-              (gnu-linux "/usr/bin/sbcl")
-              (otherwise "lisp")))
-      (add-hook 'lisp-mode-hook #'sly-mode))))
+            (pcase system-type
+              ('darwin "/usr/local/bin/sbcl")
+              ('gnu-linux "/usr/bin/sbcl")))
+      (add-hook 'lisp-mode-hook #'sly-mode)))
+
+  (add-hook 'lisp-mode-hook #'cfg:-clisp-hook))
 
 ;;;###autoload (cfg:auto-module "\\.li?sp\\'" clisp)
 ;;;###autoload (cfg:auto-module "\\.cl\\'" clisp)
@@ -23,6 +23,7 @@
 
 (defun cfg:-clisp-hook ()
   "A hook that is called when Lisp mode is loaded."
+  (setq sly-complete-symbol-function 'sly-simple-completions)
   (display-line-numbers-mode t))
 
 ;;; cfg-clisp.el ends here
