@@ -11,6 +11,7 @@
   (cfg:-setup-recentf)
   (cfg:-setup-ediff)
   (cfg:-setup-folding)
+  (cfg:-setup-deft)
   (cfg:-setup-projectile)
   (cfg:-setup-helm)
   (cfg:-setup-autocompletion)
@@ -162,6 +163,22 @@
                 (local-set-key (kbd "C-c f t") #'fold-dwim-toggle)
                 (local-set-key (kbd "C-c f s") #'fold-dwim-show-all)
                 (local-set-key (kbd "C-c f h") #'fold-dwim-hide-all)))))
+
+;;}}}
+
+;;{{{ Setup deft
+;; ----------------------------------------------------------------------------
+
+(defun cfg:-setup-deft ()
+  "Setup deft."
+  (cfg:install deft
+    (cfg:with-local-autoloads
+      (setq
+       deft-directory (expand-file-name "misc/notes/notes" (getenv "HOME"))
+       deft-extensions '("org" "txt" "md")
+       deft-auto-save-interval 0))
+
+    (global-set-key (kbd "<f11>") #'deft)))
 
 ;;}}}
 
