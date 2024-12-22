@@ -19,7 +19,8 @@
   (cfg:-setup-flycheck)
   (cfg:-setup-magit)
   (cfg:-setup-ahg)
-  (cfg:-setup-git-gutter))
+  (cfg:-setup-git-gutter)
+  (cfg:-setup-gptel))
 
 ;;{{{ Setup term
 ;; ----------------------------------------------------------------------------
@@ -448,6 +449,17 @@
     (global-set-key (kbd "C-c v n") 'git-gutter:next-hunk)
     (global-set-key (kbd "C-c v s") 'git-gutter:stage-hunk)
     (global-set-key (kbd "C-c v r") 'git-gutter:revert-hunk)))
+
+;;}}}
+
+;;{{{ Setup gptel
+;; ----------------------------------------------------------------------------
+
+(defun cfg:-setup-gptel ()
+  "Setup gptel."
+  (cfg:install gptel
+    (cfg:with-local-autoloads
+      (global-set-key (kbd "C-c <return>") 'gptel-send))))
 
 ;;}}}
 
