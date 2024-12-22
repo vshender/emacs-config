@@ -55,7 +55,7 @@
   ;; system.
   ;;
   ;; http://www.cofault.com/2011/12/cue-key.html
-  (mapcar*
+  (cl-mapcar
    (lambda (r e)  ; R and E are matching Russian and English keysyms
      ;; Iterate over modifiers.
      (mapc (lambda (mod)
@@ -74,7 +74,7 @@
    tab-width 4
    standard-indent 4
    indent-tabs-mode nil
-   fill-column 80))
+   fill-column 79))
 
 (defun cfg:-setup-whitespace ()
   "Setup dealing with whitespace."
