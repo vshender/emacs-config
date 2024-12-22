@@ -18,7 +18,8 @@
   (cfg:-setup-yasnippet)
   (cfg:-setup-flycheck)
   (cfg:-setup-magit)
-  (cfg:-setup-ahg))
+  (cfg:-setup-ahg)
+  (cfg:-setup-git-gutter))
 
 ;;{{{ Setup term
 ;; ----------------------------------------------------------------------------
@@ -428,6 +429,23 @@
   "Setup ahg."
   (cfg:install ahg
     (cfg:with-local-autoloads)))
+
+;;}}}
+
+;;{{{ Setup git-gutter
+;; ----------------------------------------------------------------------------
+
+(defun cfg:-setup-git-gutter ()
+  "Setup git-gutter."
+  (cfg:install git-gutter
+    (require 'git-gutter)
+    (global-git-gutter-mode t)
+
+    (global-set-key (kbd "C-c v =") 'git-gutter:popup-hunk)
+    (global-set-key (kbd "C-c v p") 'git-gutter:previous-hunk)
+    (global-set-key (kbd "C-c v n") 'git-gutter:next-hunk)
+    (global-set-key (kbd "C-c v s") 'git-gutter:stage-hunk)
+    (global-set-key (kbd "C-c v r") 'git-gutter:revert-hunk)))
 
 ;;}}}
 
