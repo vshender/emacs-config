@@ -39,6 +39,10 @@
   ;; vertically.
   (setq split-height-threshold 255)
 
+  ;; Increase splitting minimum width in order to prevent splitting a window
+  ;; horizontally.
+  (setq split-width-threshold 200)
+
   ;; Don't beep, just subtly flash the modeline on alarms.
   (setq ring-bell-function
     (lambda ()
@@ -59,16 +63,41 @@
 
 (defun cfg:-setup-color-theme ()
   "Setup Emacs color theme."
-  (cfg:install solarized-emacs
-    (add-to-list 'custom-theme-load-path default-directory)
-    (load-theme 'solarized-dark t)
 
-    (setq
-     solarized-high-contrast-mode-line nil
-     solarized-use-less-bold t)))
+  ;; Solarized theme
+  ;;
+  ;; (cfg:install solarized-emacs
+  ;;   (add-to-list 'custom-theme-load-path default-directory)
+  ;;   (load-theme 'solarized-dark t)
+  ;;
+  ;;   (setq
+  ;;    solarized-high-contrast-mode-line nil
+  ;;    solarized-use-less-bold t))
+
+  ;; Zenburn theme
+  ;;
+  ;; (cfg:install color-theme-zenburn
+  ;;   (add-to-list 'custom-theme-load-path default-directory)
+  ;;   (load-theme 'zenburn t)
+  ;;
+  ;;   (setq
+  ;;    ;; use variable-pitch fonts for some headings and titles
+  ;;    zenburn-use-variable-pitch t
+  ;;    ;; scale headings in org-mode
+  ;;    zenburn-scale-org-headlines t
+  ;;    ;; scale headings in outline-mode
+  ;;    zenburn-scale-outline-headlines t))
+
+  ;; Nord theme
+  ;;
+  (cfg:install nord-theme
+    (add-to-list 'custom-theme-load-path default-directory)
+    (load-theme 'nord))
+  )
 
 (defun cfg:-setup-font ()
   (when (eq system-type 'darwin)
-    (set-frame-font "Menlo-11" nil t)))
-
+    (set-frame-font "Menlo-11" nil t))
+  (when (eq system-type 'gnu/linux)
+    (set-frame-font "Meslo LG S DZ-9" nil t)))
 ;;; 50-cfg-gui.el ends here
