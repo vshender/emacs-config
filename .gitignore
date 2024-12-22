@@ -5,6 +5,7 @@ auto-save-list
 eclipse.jdt.ls
 el-get
 elpa
+org-roam.db
 workspace
 .cache
 .dap-breakpoints

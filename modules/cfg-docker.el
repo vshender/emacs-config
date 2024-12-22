@@ -12,6 +12,9 @@
 
 ;;;###autoload (cfg:auto-module "^Dockerfile$" docker)
 
+;;; Enable docker for org files in order to add support to Babel.
+;;;###autoload (cfg:auto-module "\\.org\\'" docker)
+
 
 (defun cfg:-docker-hook ()
   "A hook that is called when docker mode is enabled."

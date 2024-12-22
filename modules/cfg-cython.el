@@ -11,6 +11,9 @@
 ;;;###autoload (cfg:auto-module "\\.pyx\\'" cython)
 ;;;###autoload (cfg:auto-module "\\.pxd\\'" cython)
 
+;;; Enable cython for org files in order to add support to Babel.
+;;;###autoload (cfg:auto-module "\\.org\\'" cython)
+
 
 (defun cfg:-cython-hook ()
   "A hook that is called when cython mode is enabled."
