@@ -3,14 +3,15 @@
 ;;; Code:
 
 (defun cfg:core-module-init ()
-  """Entry function of core module for the cfg init system."""
+  "Entry function of core module for the cfg init system."
 
-  (when (memq window-system '(mac ns))
-    ;; Ensure environment variables inside Emacs look the same as in the user's
-    ;; shell.
-    (cfg:install exec-path-from-shell
-      (require 'exec-path-from-shell)
-      (exec-path-from-shell-initialize)))
+  (setq shell-file-name "/bin/zsh")
+
+  ;; Ensure environment variables inside Emacs look the same as in the user's
+  ;; shell.
+  (cfg:install exec-path-from-shell
+    (require 'exec-path-from-shell)
+    (exec-path-from-shell-initialize))
 
   ;; Set file for storing customization information.
   (setq custom-file (expand-file-name "custom.el" cfg:var-dir))
