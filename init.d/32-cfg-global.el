@@ -7,6 +7,7 @@
 
   (cfg:-setup-term)
   (cfg:-setup-ido)
+  (cfg:-setup-avy)
   (cfg:-setup-recentf)
   (cfg:-setup-ediff)
   (cfg:-setup-folding)
@@ -73,6 +74,19 @@
   ;;     (with-eval-after-load 'smex
   ;;       (setq smex-save-file (expand-file-name "smex.hist" cfg:var-dir)))))
   )
+
+;;}}}
+
+;;{{{ Setup avy
+;; ----------------------------------------------------------------------------
+
+(defun cfg:-setup-avy ()
+  "Setup avy."
+
+  (cfg:install avy
+    (cfg:with-local-autoloads
+      (avy-setup-default)
+      (global-set-key (kbd "C-;") 'avy-goto-word-or-subword-1))))
 
 ;;}}}
 
