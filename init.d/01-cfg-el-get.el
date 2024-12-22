@@ -21,12 +21,14 @@
   (package-install 'el-get)
 
   (require 'el-get)
-  (require 'el-get-elpa)
-
-  (el-get-elpa-build-local-recipes)
 
   ;; This will cause el-get to download the freshest version of itself.
   (el-get 'sync))
+
+(require 'el-get-elpa)
+
+(unless (file-directory-p el-get-recipe-path-elpa)
+  (el-get-elpa-build-local-recipes))
 
 
 (setq

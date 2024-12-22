@@ -35,6 +35,9 @@
 (let ((default-directory cfg:plugin-dir))
   (normal-top-level-add-subdirs-to-load-path))
 
+(setq default-directory "~/")
+(setq command-line-default-directory "~/")
+
 ;;}}}
 
 ;;{{{ Module loading helpers

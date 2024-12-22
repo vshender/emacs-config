@@ -1,11 +1,13 @@
 *~
 .DS_Store
-var
 auto-save-list
+bookmarks
 eclipse.jdt.ls
 el-get
 elpa
 org-roam.db
+transient
+var
 workspace
 .cache
 .dap-breakpoints
