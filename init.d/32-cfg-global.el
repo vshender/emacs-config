@@ -189,6 +189,8 @@
   (cfg:install projectile
     (require 'projectile)
 
+    (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
+
     (setq
      projectile-mode-line '(:eval (format " prj[%s]" (projectile-project-name)))
      projectile-known-projects-file (expand-file-name
