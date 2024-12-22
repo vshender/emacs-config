@@ -19,6 +19,9 @@
     (write-region "" nil custom-file))
   (load custom-file)
 
+  (set-language-environment "UTF-8")
+
+  (cfg:-setup-keybindings)
   (cfg:-setup-cyrillic-shortcuts)
   (cfg:-setup-indenting)
   (cfg:-setup-whitespace)
@@ -28,8 +31,19 @@
 
   ;; Ask before closing Emacs.
   (when window-system
-    (global-set-key (kbd "C-x C-c") 'cfg:ask-before-closing)))
+    (global-set-key (kbd "C-x C-c") #'cfg:ask-before-closing)))
 
+(defun cfg:-setup-keybindings ()
+  "Setup some keybindings."
+
+  (when (eq system-type 'gnu/linux)
+    (global-set-key (kbd "<home>") #'beginning-of-buffer)
+    (global-set-key (kbd "<end>") #'end-of-buffer)
+
+    ;; I use Alt-space to switch Xorg keyboard layout.  `ignore' function is
+    ;; used here instead of `global-unset-key' in order to avoid "M-SPС is
+    ;; undefined" warning.
+    (global-set-key (kbd "M-SPC") #'ignore)))
 
 (defun cfg:-setup-cyrillic-shortcuts ()
   "Fix problem with keyboard shortcuts in cyrillic keyboard layout."
