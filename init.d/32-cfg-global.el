@@ -222,6 +222,11 @@
       (eval-after-load 'helm-mode
         '(add-to-list 'helm-completing-read-handlers-alist '(find-file . ido)))
 
+      ;; Let `C-n'/`C-p' cross between "Emacs Commands" and
+      ;; "Emacs Command History".
+      ;;   https://github.com/emacs-helm/helm/issues/683
+      (setq helm-move-to-line-cycle-in-source nil)
+
       ;; The default "C-x c" is quite close to "C-x C-c", which quits Emacs.
       ;; Changed to "C-c h".
       (global-set-key (kbd "C-c h") #'helm-command-prefix)
