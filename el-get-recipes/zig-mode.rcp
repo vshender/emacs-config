@@ -1,0 +1,6 @@
+(:name zig-mode
+       :description "Syntax highlighting for the Zig programming language"
+       :type github
+       :minimum-emacs-version "24.3"
+       :pkgname "ziglang/zig-mode"
+       :depends (reformatter))
