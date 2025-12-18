@@ -1,5 +1,25 @@
-# emacs-config
+# My Emacs Config
 
-My emacs config. It's another attempt to rewrite the config from scratch in a cleaner way.
+Personal Emacs configuration using [Elpaca](https://github.com/progfolio/elpaca) package manager with a modular architecture.
 
-The core of the configuration is based on [ECFG Emacs configuration framework](https://github.com/maslennikov/emacs-config) by Alexey Maslennikov.
+## Installation
+
+```bash
+git clone https://github.com/vshender/.emacs.d ~/.emacs.d
+```
+
+On first launch, Elpaca will automatically install all required packages.
+
+## Dependencies
+
+The following external tools are required:
+
+- [fd](https://github.com/sharkdp/fd) - Fast file finder.
+  Used for quickly locating files in projects.
+
+- [ripgrep](https://github.com/BurntSushi/ripgrep) - Fast recursive search tool.
+  Used by `consult-ripgrep` for project-wide text search and by the MCP ripgrep server for LLM-assisted code search.
+
+## LLM Configuration
+
+gptel requires API keys for the configured backends.  See [gptel documentation](https://github.com/karthink/gptel?tab=readme-ov-file#setup) for more details.

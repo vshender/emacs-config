@@ -1,148 +1,43 @@
-;;; init.el --- entry init script for Emacs configuration setup  -*- lexical-binding: t -*-
+;;; init.el --- Main Emacs configuration entry point  -*- lexical-binding: t -*-
 
 ;;; Commentary:
-
-;; The configuration core is based on ECFG Emacs configuration framework:
-;; https://github.com/maslennikov/emacs-config.
 ;;
-;; Configuration files are located in two directories:
-;; - init.d: contains core Emacs configuration, universally applied to all
-;;   Emacs activities;
-;; - modules: contains configuration relevant for particular contexts (e.g.
-;;   major mode set-ups).
+;; Main configuration file that sets up load paths and loads modular
+;; configuration files from lisp/ directory.  Each module handles a specific
+;; aspect of the configuration (packages, UI, completion, etc.).
 
 ;;; Code:
 
-;;{{{ Config directories setup
-;; ----------------------------------------------------------------------------
+;; Directory for persistent data: saved settings, bookmarks, custom configs.
+(defconst my/etc-dir (expand-file-name "etc" user-emacs-directory))
 
-(defconst cfg:init-dir (expand-file-name "init.d" user-emacs-directory)
-  "Directory for core Emacs configuration.")
-(defconst cfg:module-dir (expand-file-name "modules" user-emacs-directory)
-  "Directory for extension modules.")
+;; Directory for volatile data: caches, history, auto-generated state.
+(defconst my/var-dir (expand-file-name "var" user-emacs-directory))
 
-(defconst cfg:plugin-dir (expand-file-name "plugins" user-emacs-directory)
-  "Directory for static plugins, i.e. not installed with el-get.")
-(defconst cfg:var-dir (expand-file-name "var" user-emacs-directory)
-  "Data directory, mainly for generated stuff, caches, state data, etc.")
+;; Ensure data directories exist.
+(dolist (dir (list my/var-dir my/etc-dir))
+  (unless (file-directory-p dir)
+    (make-directory dir 'recursive)))
 
-(unless (file-directory-p cfg:plugin-dir)
-  (make-directory cfg:plugin-dir 'recursive))
-(unless (file-directory-p cfg:var-dir)
-  (make-directory cfg:var-dir 'recursive))
+;; Redirect native compilation cache to the var/ directory.
+(when (native-comp-available-p)
+  (startup-redirect-eln-cache
+   (expand-file-name "eln-cache" my/var-dir)))
 
-(add-to-list 'load-path cfg:plugin-dir)
-(let ((default-directory cfg:plugin-dir))
-  (normal-top-level-add-subdirs-to-load-path))
+;; Add lisp/ directory to load path for modular config files.
+(add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
 
-(setq default-directory "~/")
-(setq command-line-default-directory "~/")
-
-;;}}}
-
-;;{{{ Module loading helpers
-;; ----------------------------------------------------------------------------
-
-(defun cfg:module-init-hook (modulename)
-  "Return the symbol for the init function of the module named MODULENAME."
-  (intern (format "cfg:%s-module-init" modulename)))
-
-(defun cfg:load-module (filename modulename)
-  "Load an init file, where FILENAME is a full path to the loaded file.
-After the file is loaded, the configuration system tries to run its init
-function named `cfg:MODULENAME-module-init' if it's defined."
-  (let ((init-hook (cfg:module-init-hook modulename)))
-    (load-file filename)
-    (if (fboundp init-hook)
-        (funcall init-hook)
-      (message "CFG: No module init-hook found: %s" init-hook))))
-
-
-(defconst cfg:module-regexp ".*cfg-\\(.+\\)\\.el$"
-  "Regexp which matches configuration module paths.
-Configuration module is either init script or extension module.")
-
-(defun cfg:run-cfg-modules (files)
-  "Load every file listed in FILES thats name matches `cfg:module-regexp`."
-  (dolist (filename files)
-    (when (string-match cfg:module-regexp filename)
-      (cfg:load-module (expand-file-name filename)
-                       (match-string 1 filename)))))
-
-;;}}}
-
-;;{{{ Core initialization scripts loading
-;; ----------------------------------------------------------------------------
-
-(defconst cfg:init-script-regexp "^[0-9][0-9]-cfg-\\(.+\\)\\.el$"
-  "Regexp which matches init script filenames.")
-
-;; Load core initialization scripts from init.d directory.
-(cfg:run-cfg-modules
- (directory-files cfg:init-dir t cfg:init-script-regexp))
-
-;;}}}
-
-;;{{{ Extensions modules autoloading
-;; ----------------------------------------------------------------------------
-
-;; Extension modules are usually corresponding to the specific emacs
-;; major-modes (e.g. js2-mode).  Their load is handled by autoloads.  Normally,
-;; such a module exports its entry function as an autoload and then via the
-;; autoload comment registers itself into the `auto-mode-alist' via
-;; `cfg:auto-module'.
-
-(defmacro cfg:auto-module (pattern module)
-  "Autoload helper for config modules.
-This function utilizes the `auto-mode-alist' to trigger the autoload of the
-module."
-  (let ((init-hook (cfg:module-init-hook module))
-        (auto-hook-name (intern (format "cfg:-auto-module-hook-%s" module))))
-    `(progn
-       ;; Check missing init hook early: on loading the loaddefs.
-       (unless (fboundp ',init-hook)
-         (error "CFG: No auto-module init-hook found: %s" ',init-hook))
-
-       ;; Define the auto-module init hook.
-       (defun ,auto-hook-name ()
-         ;; Remove itself from the `auto-mode-alist' upon the first call.
-         (setq auto-mode-alist
-               (rassq-delete-all ',auto-hook-name auto-mode-alist))
-         ;; Run the module init-hook triggering the module autoload.
-         (,init-hook)
-         ;; Hoping that in hook the proper `auto-mode-alist' entry was
-         ;; inserted.
-         (set-auto-mode))
-
-       ;; Register the auto-module hook to the `auto-mode-alist'.
-       (add-to-list 'auto-mode-alist '(,pattern . ,auto-hook-name)))))
-
-;;; Load all modules for the first time triggering el-get to install all stuff
-;;; we need; for the subsequent runs the generated autoloads will be picked-up.
-
-(require 'autoload)
-
-(defconst cfg:modules-autoload-file (expand-file-name "loaddefs.el" cfg:var-dir)
-  "File containing modules autoload definitions.")
-
-(defun cfg:generate-modules-autoloads ()
-  "Update autoload definitions for extension modules."
-  (interactive)
-
-  ;; Directory containing autoloads should be included because loaddefs has
-  ;; relative paths.
-  (add-to-list 'load-path (file-name-directory cfg:modules-autoload-file))
-
-  (let ((generated-autoload-file cfg:modules-autoload-file))
-    (cfg:run-cfg-modules (directory-files cfg:module-dir t))
-    (update-directory-autoloads cfg:module-dir)))
-
-(if (file-exists-p cfg:modules-autoload-file)
-    ;; Already been there, just load loaddefs.
-    (load-file cfg:modules-autoload-file)
-  ;; Making the first run, churn up all modules to trigger el-get installs.
-  (cfg:generate-modules-autoloads))
-
-;;}}}
+;; Load configuration modules in order.
+;; Note: init-elpaca must be loaded first to set up package management.
+(require 'init-elpaca)                  ; package management (Elpaca)
+(require 'init-core)                    ; core Emacs settings
+(require 'init-ui)                      ; UI and theme
+(require 'init-windows)                 ; window management
+(require 'init-shell)                   ; shell/terminal (eshell, eat)
+(require 'init-completion)              ; completion (vertico, corfu, etc.)
+(require 'init-org)                     ; org-mode and org-roam
+(require 'init-vcs)                     ; version control (magit, diff-hl)
+(require 'init-llm)                     ; LLM integration (gptel, claude-code)
+(require 'init-prog)                    ; general programming settings
 
 ;;; init.el ends here
