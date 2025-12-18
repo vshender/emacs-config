@@ -40,5 +40,6 @@
 (require 'init-llm)                     ; LLM integration (gptel, claude-code)
 (require 'init-prog)                    ; general programming settings
 (require 'init-prog-elisp)              ; Emacs Lisp configuration
+(require 'init-prog-python)             ; Python configuration
 
 ;;; init.el ends here

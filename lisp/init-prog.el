@@ -55,6 +55,35 @@ Prompt the user for the project to use if no project is found."
   :bind
   (([remap project-find-regexp] . my/project-ripgrep)))
 
+;; treesit: Built-in tree-sitter support for enhanced syntax highlighting
+;; and structural editing.
+(use-feature treesit
+  :config
+  (defconst my/treesit-install-dir (expand-file-name "tree-sitter" my/var-dir)
+    "Directory for storing tree-sitter grammar libraries.")
+
+  ;; Tell treesit to look for grammars in our custom directory.
+  (setq treesit-extra-load-path (list my/treesit-install-dir))
+
+  (defun my/ensure-treesit-grammar (lang url)
+    "Ensure tree-sitter grammar for LANG is installed from URL.
+If the grammar is not available, temporarily set `treesit-language-source-alist'
+and install it automatically."
+    (unless (treesit-language-available-p lang)
+      (let ((treesit-language-source-alist `((,lang ,url))))
+        (treesit-install-language-grammar lang my/treesit-install-dir)))))
+
+;; eglot: Built-in LSP client for language server integration.  Provides
+;; code completion, diagnostics, and refactoring support.
+(use-feature eglot
+  :defer t
+
+  :custom
+  ;; Shutdown language server when last managed buffer is killed.
+  (eglot-autoshutdown t)
+  ;; Disable events buffer for performance.
+  (eglot-events-buffer-size 0))
+
 (provide 'init-prog)
 
 ;;; init-prog.el ends here
