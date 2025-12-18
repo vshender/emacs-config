@@ -39,5 +39,6 @@
 (require 'init-vcs)                     ; version control (magit, diff-hl)
 (require 'init-llm)                     ; LLM integration (gptel, claude-code)
 (require 'init-prog)                    ; general programming settings
+(require 'init-prog-elisp)              ; Emacs Lisp configuration
 
 ;;; init.el ends here
