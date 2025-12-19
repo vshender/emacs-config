@@ -23,6 +23,9 @@ On first launch, Elpaca will automatically install all required packages.
 - [dasel](https://github.com/TomWright/dasel) - JSON/YAML/TOML query tool.
   Used by pet to parse Python project config files (pyproject.toml, etc.) for virtual environment detection.
 
+- [jq](https://github.com/jqlang/jq) - JSON processor.
+  Used by `jq-mode` for interactive JSON filtering.
+
 - [pandoc](https://pandoc.org/) - Universal document converter.
   Used by `markdown-mode` for document preview and export.
 
@@ -31,6 +34,9 @@ On first launch, Elpaca will automatically install all required packages.
 - [basedpyright](https://github.com/DetachHead/basedpyright) - Python language server.
   Provides code completion, diagnostics, and navigation for Python via eglot.
   Can be installed in the project's virtual environment.
+
+- [vscode-json-languageserver](https://github.com/microsoft/vscode-json-languageservice) - JSON language server.
+  Provides schema validation, completion, and diagnostics for JSON/JSONC files.
 
 ### Linters
 

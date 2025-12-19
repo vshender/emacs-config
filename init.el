@@ -41,6 +41,7 @@
 (require 'init-markdown)                ; Markdown configuration
 (require 'init-prog)                    ; general programming settings
 (require 'init-prog-elisp)              ; Emacs Lisp configuration
+(require 'init-prog-json)               ; JSON configuration
 (require 'init-prog-python)             ; Python configuration
 
 ;;; init.el ends here
