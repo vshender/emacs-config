@@ -23,6 +23,9 @@ On first launch, Elpaca will automatically install all required packages.
 - [dasel](https://github.com/TomWright/dasel) - JSON/YAML/TOML query tool.
   Used by pet to parse Python project config files (pyproject.toml, etc.) for virtual environment detection.
 
+- [pandoc](https://pandoc.org/) - Universal document converter.
+  Used by `markdown-mode` for document preview and export.
+
 ### Language Servers
 
 - [basedpyright](https://github.com/DetachHead/basedpyright) - Python language server.
