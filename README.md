@@ -38,6 +38,9 @@ On first launch, Elpaca will automatically install all required packages.
 - [vscode-json-languageserver](https://github.com/microsoft/vscode-json-languageservice) - JSON language server.
   Provides schema validation, completion, and diagnostics for JSON/JSONC files.
 
+- [yaml-language-server](https://github.com/redhat-developer/yaml-language-server) - YAML language server.
+  Provides schema validation, completion, and diagnostics for YAML files.
+
 ### Linters
 
 - [ruff](https://github.com/astral-sh/ruff) - Fast Python linter and formatter.

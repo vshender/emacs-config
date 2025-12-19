@@ -43,5 +43,6 @@
 (require 'init-prog-elisp)              ; Emacs Lisp configuration
 (require 'init-prog-json)               ; JSON configuration
 (require 'init-prog-python)             ; Python configuration
+(require 'init-prog-yaml)               ; YAML configuration
 
 ;;; init.el ends here
