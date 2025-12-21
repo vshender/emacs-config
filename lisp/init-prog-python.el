@@ -22,8 +22,6 @@
   ;; Install tree-sitter grammar for Python if not available.
   (my/ensure-treesit-grammar
    'python "https://github.com/tree-sitter/tree-sitter-python")
-
-  :config
   (add-to-list 'major-mode-remap-alist '(python-mode . python-ts-mode))
 
   :hook
@@ -45,6 +43,11 @@
   ;; Limit file search functions for better performance.
   (pet-find-file-functions '(pet-find-file-from-project-root
                              pet-locate-dominating-file))
+
+  ;; Only search for executables within project virtualenvs, not globally.
+  ;; When enabled, pet searches system-wide for each executable not found
+  ;; locally, resulting in several-second Python file open time.
+  (pet-search-globally nil)
 
   :config
   (add-hook 'python-base-mode-hook 'pet-mode -10))
