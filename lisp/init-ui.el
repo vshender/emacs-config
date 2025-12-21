@@ -24,7 +24,7 @@
         (nord12 "#D08770")  ; bright-red
         (nord13 "#EBCB8B")  ; yellow
         (nord14 "#A3BE8C")  ; green
-        (nord15 "#B48EAD") ; magenta
+        (nord15 "#B48EAD")  ; magenta
         ;; Index 20 is the brightest level in Nord theme's comment brightness
         ;; scale (0-20).
         (nord-comment (nth 20 nord-theme--brightened-comments)))
@@ -76,17 +76,65 @@
   ;; Don't show the splash screen.
   (inhibit-startup-screen t)
 
-  ;; Flash when the bell rings.
-  (visible-bell t)
-
   ;; Increase splitting minimum height in order to prevent splitting a window
   ;; vertically.
-  (split-height-threshold 100)
+  (split-height-threshold 120)
   ;; Increase splitting minimum width in order to prevent splitting a window
   ;; horizontally.
   (split-width-threshold 200)
 
   :config
+  (when (eq system-type 'darwin)
+    (defun my/visible-bell-fn ()
+      "Flash the first line and echo area like Linux visible-bell."
+      (let* ((default-fg (face-foreground 'default))
+             (flash-face `(:background ,default-fg :extend t))
+             (overlays nil))
+        ;; Create overlays for the first line in all top-row windows.
+        (walk-windows
+         (lambda (win)
+           (when (zerop (nth 1 (window-edges win)))  ; window top edge at 0
+             (let* ((buf (window-buffer win))
+                    (start (window-start win))
+                    (end (with-selected-window win
+                           (save-excursion
+                             (goto-char start)
+                             (forward-line 1)
+                             (point))))
+                    (ov (make-overlay start end buf)))
+               (overlay-put ov 'face flash-face)
+               (overlay-put ov 'priority 9999)
+               (push ov overlays))))
+         nil 'visible)
+
+        ;; Remove all overlays after delay.
+        (run-with-timer
+         0.1 nil
+         (lambda ()
+           (dolist (ov overlays)
+             (delete-overlay ov))))
+
+        ;; Flash the echo area by inverting the current message.
+        ;; Use a 0-delay timer to run after the current command finishes.
+        (run-with-timer
+         0 nil
+         (lambda ()
+           (let ((msg (or (current-message) "")))
+             (message "%s" (propertize
+                            (concat msg (make-string (max 0 (- (frame-width) (length msg))) ?\s))
+                            'face flash-face))
+             (run-with-timer 0.1 nil #'message "%s" msg)))))))
+
+  ;; Flash when the bell rings.
+  (pcase system-type
+    ('gnu/linux
+     (setq visible-bell t))
+    ('darwin
+     ;; Mimic Linux visible-bell behavior: briefly invert the first line and
+     ;; echo area.  The default `visible-bell' on macOS shows a huge
+     ;; distracting exclamation mark icon.
+     (setq ring-bell-function #'my/visible-bell-fn)))
+
   (with-eval-after-load 'nord-theme
     ;; Restore modeline after theme is loaded (disabled in early-init.el to
     ;; prevent flash of unstyled modeline).
@@ -108,7 +156,7 @@
   (set-frame-font
    (pcase system-type
      ('gnu/linux "Meslo LG S DZ-9")
-     ('darwin "Menlo-11"))
+     ('darwin "Menlo-12"))
    nil t))
 
 (provide 'init-ui)
