@@ -85,7 +85,7 @@
 
   :config
   (when (eq system-type 'darwin)
-    (defun my/visible-bell-fn ()
+    (defun my/-visible-bell-fn ()
       "Flash the first line and echo area like Linux visible-bell."
       (let* ((default-fg (face-foreground 'default))
              (flash-face `(:background ,default-fg :extend t))
@@ -133,7 +133,7 @@
      ;; Mimic Linux visible-bell behavior: briefly invert the first line and
      ;; echo area.  The default `visible-bell' on macOS shows a huge
      ;; distracting exclamation mark icon.
-     (setq ring-bell-function #'my/visible-bell-fn)))
+     (setq ring-bell-function #'my/-visible-bell-fn)))
 
   (with-eval-after-load 'nord-theme
     ;; Restore modeline after theme is loaded (disabled in early-init.el to

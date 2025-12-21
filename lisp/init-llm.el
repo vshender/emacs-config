@@ -109,7 +109,7 @@ original window if the current window differs from it."
   ;; Declare external variable from eat package.
   (defvar eat-term-name)
 
-  (defun my/claude-code (&optional arg)
+  (defun my/-claude-code (&optional arg)
     "Start Claude Code with proper terminal emulation settings.
 
 With prefix ARG, prompt for directory to run Claude Code in.
@@ -124,7 +124,7 @@ terminal is properly configured before the eat process starts."
     (let ((eat-term-name "xterm-256color"))
       (claude-code arg)))
 
-  (defun my/claude-code-display-buffer (buffer)
+  (defun my/-claude-code-display-buffer (buffer)
     "Display Claude Code BUFFER in a side window.
 If there are multiple windows, display in another window.
 If there's only one window, split and display on the right."
@@ -141,7 +141,7 @@ If there's only one window, split and display on the right."
 
   :custom
   ;; Use custom display function to control Claude Code buffer placement.
-  (claude-code-display-window-fn #'my/claude-code-display-buffer)
+  (claude-code-display-window-fn #'my/-claude-code-display-buffer)
 
   :config
   ;; Enable auto-revert for files modified by Claude.  The :git-merge option
@@ -179,7 +179,7 @@ If there's only one window, split and display on the right."
   :bind
   (:map claude-code-command-map
    ;; Use the wrapper to set `eat-term-name' before Claude Code starts.
-   ("c" . my/claude-code)
+   ("c" . my/-claude-code)
    ;; Define a repeat map so pressing `M' after invoking
    ;; `claude-code-cycle-mode' via `C-c . M' continues to cycle through
    ;; auto-accept/plan/confirm modes without needing the prefix.
