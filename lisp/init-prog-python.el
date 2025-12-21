@@ -54,11 +54,19 @@
 
 ;; flymake-ruff: Ruff linter integration via Flymake.
 (use-package flymake-ruff
+  ;; Use custom fork with buffer-local program variables fix.
+  ;; TODO: Switch back to the original repository when the fix is merged.
+  :ensure
+  (:host github
+   :repo "vshender/flymake-ruff"
+   :branch "fix/buffer-local-program-variables")
   :hook
   ;; Run ruff only when Eglot is managing the buffer (keeps it "project aware").
   (eglot-managed-mode . (lambda ()
                           (when (derived-mode-p 'python-base-mode)
-                            (when-let ((ruff (pet-executable-find "ruff")))
+                            ;; Prefer project-local ruff, fall back to global.
+                            (when-let ((ruff (or (pet-executable-find "ruff")
+                                                 (executable-find "ruff"))))
                               (setq-local flymake-ruff-program ruff)
                               (flymake-ruff-load))))))
 
