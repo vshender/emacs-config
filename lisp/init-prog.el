@@ -84,6 +84,50 @@ and install it automatically."
   ;; Disable events buffer for performance.
   (eglot-events-buffer-size 0))
 
+;; eldoc: Built-in feature that displays documentation for the symbol at
+;; point in the echo area or a dedicated buffer.
+(use-feature eldoc
+  :config
+  ;; Some LSP servers return documentation with HTML entities (e.g., &lt;
+  ;; instead of <).  This advice preprocesses eldoc output to replace these
+  ;; entities with their actual characters.
+  ;; See https://emacs.stackexchange.com/a/82952/9782
+  (defvar my/-eldoc-html-patterns
+    '(("&nbsp;" " ")
+      ("&lt;" "<")
+      ("&gt;" ">")
+      ("&amp;" "&")
+      ("&quot;" "\"")
+      ("&apos;" "'"))
+    "List of (PATTERN . REPLACEMENT) to replace in eldoc output.")
+
+  (defun my/-string-replace-all (patterns in-string)
+    "Replace all cars from PATTERNS in IN-STRING with their pair."
+    (mapc (lambda (pattern-pair)
+            (setq in-string
+                  (string-replace (car pattern-pair)
+                                  (cadr pattern-pair)
+                                  in-string)))
+          patterns)
+    in-string)
+
+  (defun my/-eldoc-preprocess (orig-fun &rest args)
+    "Preprocess the docs to be displayed by eldoc to replace HTML escapes."
+    (let ((doc (car args)))
+      ;; The first argument is a list of (STRING :KEY VALUE ...) entries
+      ;; we replace the text in each such string
+      ;; see docstring of `eldoc-display-functions'
+      (when (listp doc)
+        (setq doc
+              (mapcar
+               (lambda (doc)
+                 (cons (my/-string-replace-all my/-eldoc-html-patterns (car doc))
+                       (cdr doc)))
+               doc)))
+      (apply orig-fun (cons doc (cdr args)))))
+
+  (advice-add 'eldoc-display-in-buffer :around #'my/-eldoc-preprocess))
+
 (provide 'init-prog)
 
 ;;; init-prog.el ends here
