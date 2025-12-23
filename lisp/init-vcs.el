@@ -23,13 +23,13 @@
 ;; diff-hl: Highlights uncommitted changes in the fringe (gutter).
 ;; Shows added, modified, and deleted lines with visual indicators.
 (use-package diff-hl
-  :config
-  (global-diff-hl-mode)
-
   :hook
   ;; Update diffs when Magit refreshes.
   ((magit-pre-refresh . diff-hl-magit-pre-refresh)
-   (magit-post-refresh . diff-hl-magit-post-refresh)))
+   (magit-post-refresh . diff-hl-magit-post-refresh))
+
+  :config
+  (global-diff-hl-mode))
 
 (provide 'init-vcs)
 

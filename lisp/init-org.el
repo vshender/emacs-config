@@ -38,6 +38,8 @@
 ;; Org: Powerful organization and note-taking system.  Configuration includes
 ;; display settings, agenda, TODO states, and LaTeX preview.
 (use-package org
+  :hook (org-mode . visual-line-mode)
+
   :custom
   ;; Directory with org files.
   (org-directory my/org-dir)
@@ -109,9 +111,7 @@
    ("C-c o g" . org-clock-goto)
    ("C-c o l" . org-store-link)
    ("C-c o c" . org-capture)
-   ("C-c C-w" . org-refile))
-
-  :hook (org-mode . visual-line-mode))
+   ("C-c C-w" . org-refile)))
 
 ;; org-clock: Time tracking for org-mode tasks.  Provides clocking in/out
 ;; functionality to measure time spent on tasks.

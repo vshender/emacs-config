@@ -12,11 +12,7 @@
 
   :init
   (my/ensure-treesit-grammar
-   'json "https://github.com/tree-sitter/tree-sitter-json")
-
-  :hook
-  ((json-ts-mode . eglot-ensure)
-   (json-ts-mode . which-function-mode)))
+   'json "https://github.com/tree-sitter/tree-sitter-json"))
 
 ;; json: Built-in JSON parsing and formatting functions.
 (use-feature json
@@ -29,9 +25,15 @@
 
 ;; eglot: Configure JSON-specific LSP settings.
 (use-feature eglot
+  :hook (json-ts-mode . eglot-ensure)
+
   :config
   (add-to-list 'eglot-server-programs
                '(json-ts-mode . ("vscode-json-languageserver" "--stdio"))))
+
+;; which-func: Display current function name in mode line for JSON paths.
+(use-feature which-func
+  :hook (json-ts-mode . which-function-mode))
 
 ;; json-snatcher: Copy path to JSON element at point.
 (use-package json-snatcher

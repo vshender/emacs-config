@@ -8,13 +8,12 @@
 
 ;; yaml-mode: Major mode for editing YAML files.
 (use-package yaml-mode
-  :mode ("\\.ya?ml\\'")
-
-  :hook
-  ((yaml-mode . eglot-ensure)))
+  :mode ("\\.ya?ml\\'"))
 
 ;; eglot: Configure YAML-specific LSP settings.
 (use-feature eglot
+  :hook (yaml-mode . eglot-ensure)
+
   :config
   (add-to-list 'eglot-server-programs
                '(yaml-mode . ("yaml-language-server" "--stdio"))))

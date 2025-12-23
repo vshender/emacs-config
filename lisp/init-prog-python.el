@@ -22,14 +22,16 @@
   ;; Install tree-sitter grammar for Python if not available.
   (my/ensure-treesit-grammar
    'python "https://github.com/tree-sitter/tree-sitter-python")
-  (add-to-list 'major-mode-remap-alist '(python-mode . python-ts-mode))
+  (add-to-list 'major-mode-remap-alist '(python-mode . python-ts-mode)))
 
-  :hook
-  ((python-base-mode . flymake-mode)
-   (python-base-mode . eglot-ensure)))
+;; flymake: Enable on-the-fly syntax checking for Python.
+(use-feature flymake
+  :hook (python-base-mode . flymake-mode))
 
 ;; eglot: Configure Python-specific LSP settings.
 (use-feature eglot
+  :hook (python-base-mode . eglot-ensure)
+
   :config
   ;; Configure basedpyright as the preferred Python language server.
   (add-to-list 'eglot-server-programs

@@ -146,6 +146,13 @@ Otherwise, insert a literal slash character."
 (use-package corfu
   :after orderless
 
+  :hook
+  (;; Enable Corfu only for certain modes (global mode doesn't play well with
+   ;; eshell if you run a repl).
+   (prog-mode . corfu-mode)
+   (shell-mode . corfu-mode)
+   (eshell-mode . corfu-mode))
+
   :custom
   ;; Enable cycling for `corfu-next'/`corfu-previous'.
   (corfu-cycle t)
@@ -156,26 +163,19 @@ Otherwise, insert a literal slash character."
   ;; Disable current candidate preview.
   (corfu-preview-current nil)
   ;; Use scroll margin.
-  (corfu-scroll-margin 5)
-
-  :hook
-  (;; Enable Corfu only for certain modes (global mode doesn't play well with
-   ;; eshell if you run a repl).
-   (prog-mode . corfu-mode)
-   (shell-mode . corfu-mode)
-   (eshell-mode . corfu-mode)))
+  (corfu-scroll-margin 5))
 
 ;; corfu-popupinfo: Shows documentation popups for completion candidates.
 (use-feature corfu-popupinfo
   :after corfu
 
+  :hook (corfu-mode . corfu-popupinfo-mode)
+
   :custom
   ;; Delay before showing the popup (initial . subsequent).
   (corfu-popupinfo-delay '(0.25 . 0.1))
   ;; Don't hide the popup when candidate changes.
-  (corfu-popupinfo-hide nil)
-
-  :hook (corfu-mode . corfu-popupinfo-mode))
+  (corfu-popupinfo-hide nil))
 
 ;; corfu-terminal: Enables corfu popup display in terminal (non-GUI) Emacs.
 (use-package corfu-terminal

@@ -8,10 +8,6 @@
 
 ;; elisp-mode: Built-in Emacs Lisp major mode.
 (use-feature elisp-mode
-  :hook
-  ((emacs-lisp-mode . flymake-mode)
-   (emacs-lisp-mode . eldoc-mode))
-
   :bind
   (:map emacs-lisp-mode-map
    ("C-c C-c" . eval-defun)
@@ -24,9 +20,13 @@
    ("C-c C-b" . eval-buffer)
    ("C-c C-r" . eval-region)))
 
+;; flymake: Enable on-the-fly syntax checking for Emacs Lisp.
+(use-feature flymake
+  :hook (emacs-lisp-mode . flymake-mode))
+
 ;; eldoc: Show function signatures and variable documentation in echo area.
 (use-feature eldoc
-  :defer t
+  :hook (emacs-lisp-mode . eldoc-mode)
 
   :custom
   (eldoc-idle-delay 0.1)
