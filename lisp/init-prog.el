@@ -87,6 +87,12 @@ and install it automatically."
 ;; eldoc: Built-in feature that displays documentation for the symbol at
 ;; point in the echo area or a dedicated buffer.
 (use-feature eldoc
+  :custom
+  ;; Show documentation quickly after stopping.
+  (eldoc-idle-delay 0.1)
+  ;; Allow multiline documentation in the echo area.
+  (eldoc-echo-area-use-multiline-p t)
+
   :config
   ;; Some LSP servers return documentation with HTML entities (e.g., &lt;
   ;; instead of <).  This advice preprocesses eldoc output to replace these

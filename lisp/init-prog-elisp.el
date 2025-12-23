@@ -24,15 +24,9 @@
 (use-feature flymake
   :hook (emacs-lisp-mode . flymake-mode))
 
-;; eldoc: Show function signatures and variable documentation in echo area.
+;; eldoc: Enable eldoc for Emacs Lisp.
 (use-feature eldoc
-  :hook (emacs-lisp-mode . eldoc-mode)
-
-  :custom
-  ;; Show documentation quickly after stopping.
-  (eldoc-idle-delay 0.1)
-  ;; Allow multiline documentation in the echo area.
-  (eldoc-echo-area-use-multiline-p t))
+  :hook (emacs-lisp-mode . eldoc-mode))
 
 ;; ielm: Interactive Emacs Lisp Mode --- a REPL for Emacs Lisp.
 (use-feature ielm
