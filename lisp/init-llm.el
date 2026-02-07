@@ -171,17 +171,17 @@ If there's only one window, split and display on the right."
 
   (claude-code-mode)
 
-  ;; Bind `C-c .' prefix to the Claude Code command map, providing quick access
+  ;; Bind `C-c c' prefix to the Claude Code command map, providing quick access
   ;; to all Claude Code commands.
   :bind-keymap
-  ("C-c ." . claude-code-command-map)
+  ("C-c c" . claude-code-command-map)
 
   :bind
   (:map claude-code-command-map
    ;; Use the wrapper to set `eat-term-name' before Claude Code starts.
    ("c" . my/-claude-code)
    ;; Define a repeat map so pressing `M' after invoking
-   ;; `claude-code-cycle-mode' via `C-c . M' continues to cycle through
+   ;; `claude-code-cycle-mode' via `C-c c M' continues to cycle through
    ;; auto-accept/plan/confirm modes without needing the prefix.
    :repeat-map my-claude-code-map
    ("M" . claude-code-cycle-mode)))
