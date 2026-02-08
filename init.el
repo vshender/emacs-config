@@ -39,6 +39,7 @@
 (require 'init-vcs)                     ; version control (magit, diff-hl)
 (require 'init-llm)                     ; LLM integration (gptel, claude-code)
 (require 'init-markdown)                ; Markdown configuration
+(require 'init-productivity)            ; productivity tools
 (require 'init-prog)                    ; general programming settings
 (require 'init-prog-elisp)              ; Emacs Lisp configuration
 (require 'init-prog-json)               ; JSON configuration
