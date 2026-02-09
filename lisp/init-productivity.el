@@ -13,6 +13,16 @@
 (use-package life-calendar
   :defer t)
 
+;; alert: Cross-platform notification library used by org-pomodoro.
+;; Uses libnotify (notify-send) on Linux and osx-notifier (terminal-notifier)
+;; on macOS for desktop notifications.
+(use-package alert
+  :custom
+  (alert-default-style (pcase system-type
+                         ('gnu/linux 'libnotify)
+                         ('darwin 'osx-notifier)
+                         (_ 'message))))
+
 ;; org-pomodoro: Pomodoro technique timer integrated with org-mode clocking.
 (use-package org-pomodoro
   :after org

@@ -29,6 +29,10 @@ On first launch, Elpaca will automatically install all required packages.
 - [pandoc](https://pandoc.org/) - Universal document converter.
   Used by `markdown-mode` for document preview and export.
 
+- [libnotify](https://gitlab.gnome.org/GNOME/libnotify) (Linux) / [terminal-notifier](https://github.com/julienXX/terminal-notifier) (macOS) - Desktop notification tools.
+  Used by `alert` for sending desktop notifications (e.g., pomodoro timer events).
+  Install via `sudo pacman -S libnotify` (Arch), `sudo apt install libnotify-bin` (Debian/Ubuntu), or `brew install terminal-notifier` (macOS).
+
 ### Language Servers
 
 - [basedpyright](https://github.com/DetachHead/basedpyright) - Python language server.
