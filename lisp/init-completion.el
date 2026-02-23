@@ -68,6 +68,30 @@ Otherwise, insert a literal slash character."
             ((file-directory-p (vertico--candidate)) (vertico-insert))
             (t (self-insert-command 1 ?/)))))
 
+  (defun my/-vertico-directory-delete-char (n)
+    "Delete N directories or characters before point.
+Like `vertico-directory-delete-char', but when point is at the end
+of the minibuffer and the input is an existing file path, delete the
+entire path component instead of a single character."
+    (interactive "p")
+    (cond
+     ;; Active region: let `delete-backward-char' handle it.
+     ((and (use-region-p) delete-active-region (= n 1))
+      (with-no-warnings (delete-backward-char n)))
+     ;; At a directory boundary, try to go up a directory.  Also at end of
+     ;; input, if the whole path is an existing local file, treat DEL as
+     ;; directory-up (delete the last path component).  Skip remote paths to
+     ;; avoid blocking on network round-trips.
+     ((and (or (eq (char-before) ?/)
+               (and (eobp)
+                    (let ((mb (minibuffer-contents-no-properties)))
+                      (and (not (file-remote-p mb))
+                           (file-exists-p mb)))))
+           (vertico-directory-up n)))
+     ;; Otherwise, delete a character.
+     (t
+      (with-no-warnings (delete-backward-char n)))))
+
   :hook
   ;; Tidy shadowed file names.
   (rfn-eshadow-update-overlay . vertico-directory-tidy)
@@ -77,7 +101,7 @@ Otherwise, insert a literal slash character."
   (:map vertico-map
    ("/"     . my/-vertico-insert)
    ("RET"   . vertico-directory-enter)
-   ("DEL"   . vertico-directory-delete-char)
+   ("DEL"   . my/-vertico-directory-delete-char)
    ("M-DEL" . vertico-directory-delete-word)))
 
 ;; orderless: Flexible completion style that matches space-separated patterns
