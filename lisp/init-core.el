@@ -52,6 +52,9 @@
   ;; After C-u C-SPC, keep pressing C-SPC to cycle through mark ring.
   (set-mark-command-repeat-pop t)
 
+  ;; Resize all windows proportionally when splitting or deleting.
+  (window-combination-resize t)
+
   ;; Whitespace handling: always add a new line to the end of a file.
   (require-final-newline t)
 
