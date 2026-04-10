@@ -49,6 +49,9 @@
   ;; Preserve clipboard content in kill ring before overwriting.
   (save-interprogram-paste-before-kill t)
 
+  ;; After C-u C-SPC, keep pressing C-SPC to cycle through mark ring.
+  (set-mark-command-repeat-pop t)
+
   ;; Whitespace handling: always add a new line to the end of a file.
   (require-final-newline t)
 
