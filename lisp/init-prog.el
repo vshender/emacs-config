@@ -82,7 +82,10 @@ and install it automatically."
   ;; Shutdown language server when last managed buffer is killed.
   (eglot-autoshutdown t)
   ;; Disable events buffer for performance.
-  (eglot-events-buffer-size 0))
+  (eglot-events-buffer-size 0)
+  ;; Increase process output buffer from 64KB to 4MB for faster LSP
+  ;; communication.
+  (read-process-output-max (* 4 1024 1024)))
 
 ;; eldoc: Built-in feature that displays documentation for the symbol at
 ;; point in the echo area or a dedicated buffer.

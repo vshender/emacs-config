@@ -21,6 +21,14 @@
   ;; Don't pop up UI dialogs when prompting.
   (use-dialog-box nil)
 
+  ;; Disable bidirectional text scanning for performance (LTR-only).
+  (bidi-display-reordering 'left-to-right)
+  (bidi-paragraph-direction 'left-to-right)
+  (bidi-inhibit-bpa t)
+
+  ;; Defer font-lock until typing stops for better responsiveness.
+  (redisplay-skip-fontification-on-input t)
+
   ;; Width of a tab character for display purposes.
   (tab-width 4)
   ;; Use spaces instead of tabs for indentation.
