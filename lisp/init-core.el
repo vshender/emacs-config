@@ -55,6 +55,9 @@
   ;; Resize all windows proportionally when splitting or deleting.
   (window-combination-resize t)
 
+  ;; Use string syntax in re-builder for single-backslash regexes.
+  (reb-re-syntax 'string)
+
   ;; Whitespace handling: always add a new line to the end of a file.
   (require-final-newline t)
 
