@@ -86,6 +86,10 @@
               :image-size-adjust (1.7 . 1.5)
               :latex-compiler ("latex -interaction nonstopmode -output-directory %o %f")
               :image-converter ("dvisvgm %f --no-fonts --exact-bbox --scale=%S --output=%O"))
+     ;; `-alpha off' is needed on Linux: ImageMagick renders PDF pages with
+     ;; semi-transparent edge pixels, which prevents `-trim' from detecting
+     ;; the uniform background.  Discarding the alpha channel makes all
+     ;; pixels fully opaque so `-trim' works correctly.
      (imagemagick :programs ("latex" "magick")
                   :description "pdf > png"
                   :message "you need to install the programs: latex and imagemagick."
@@ -93,13 +97,24 @@
                   :image-output-type "png"
                   :image-size-adjust (1.0 . 1.0)
                   :latex-compiler ("pdflatex -interaction nonstopmode -output-directory %o %f")
-                  :image-converter ("magick convert -density %D -trim -antialias %f -quality 100 %O"))))
+                  :image-converter ("magick -density %D -antialias %f -alpha off -trim -quality 100 %O"))))
 
   :config
-  ;; LaTeX packages for Russian language support and TikZ.
+  ;; Adjust LaTeX preview scale to match text size.
+  ;; `org--get-display-dpi' (changed in org 9.7) returns the physical monitor
+  ;; DPI, but Emacs renders text at the X logical DPI.  Compute the ratio to
+  ;; keep formula size consistent with the surrounding text.
+  (when (display-graphic-p)
+    (plist-put org-format-latex-options :scale
+               (/ (float (round (/ (display-pixel-height)
+                                   (/ (display-mm-height) 25.4))))
+                  (org--get-display-dpi))))
+
+  ;; LaTeX packages for Russian language support, TikZ, and algorithms.
   (add-to-list 'org-latex-packages-alist '("T2A" "fontenc" t))
   (add-to-list 'org-latex-packages-alist '("english, russian" "babel" t))
   (add-to-list 'org-latex-packages-alist '("" "tikz" t))
+  (add-to-list 'org-latex-packages-alist '("" "algpseudocode" t))
 
   ;; Enable TikZ preview in AUCTeX.
   (eval-after-load 'preview
