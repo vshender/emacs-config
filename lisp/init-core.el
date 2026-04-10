@@ -17,6 +17,12 @@
 ;; handling, and Cyrillic keyboard support for using keybindings with Russian
 ;; layout.
 (use-feature emacs
+  :hook
+  ;; Fix trailing whitespace on file save.
+  (before-save . whitespace-cleanup)
+  ;; Automatically make scripts with shebang lines executable on save.
+  (after-save . executable-make-buffer-file-executable-if-script-p)
+
   :custom
   ;; Don't pop up UI dialogs when prompting.
   (use-dialog-box nil)
@@ -59,9 +65,6 @@
   (when (eq system-type 'gnu/linux)
     (global-set-key (kbd "<home>") #'beginning-of-buffer)
     (global-set-key (kbd "<end>") #'end-of-buffer))
-
-  ;; Fix trailing whitespace on file save.
-  (add-hook 'before-save-hook #'whitespace-cleanup)
 
   ;; Map Modifier-CyrillicLetter to the underlying Modifier-LatinLetter, so
   ;; that control sequences can be used when keyboard mapping is changed
