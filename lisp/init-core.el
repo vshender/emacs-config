@@ -40,6 +40,9 @@
   ;; Always select the help window.
   (help-window-select t)
 
+  ;; Preserve clipboard content in kill ring before overwriting.
+  (save-interprogram-paste-before-kill t)
+
   ;; Whitespace handling: always add a new line to the end of a file.
   (require-final-newline t)
 
@@ -125,6 +128,18 @@
   :custom
   ;; Store the history file in the var/ directory.
   (savehist-file (expand-file-name "history" my/var-dir))
+
+  ;; Persist kill ring and search rings across sessions.
+  (savehist-additional-variables
+   '(search-ring regexp-search-ring kill-ring))
+
+  :hook
+  ;; Strip text properties from kill ring before saving to prevent
+  ;; savehist file bloat.
+  (savehist-save . (lambda ()
+                     (setq kill-ring
+                           (mapcar #'substring-no-properties
+                                   (cl-remove-if-not #'stringp kill-ring)))))
 
   :config
   (savehist-mode 1))
