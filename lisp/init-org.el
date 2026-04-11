@@ -168,9 +168,37 @@
 ;; in their native major mode via a dedicated buffer.
 (use-feature org-src
   :after org
+
+  :init
+  (defun my/eval-last-sexp-org-aware (insert-value)
+    "Like `eval-last-sexp', but respect :lexical header in Org src blocks.
+When point is inside an Org src block, evaluate the preceding sexp
+using the :lexical header argument of that block.  Otherwise, fall
+back to the standard `eval-last-sexp'.
+
+With prefix argument INSERT-VALUE, insert the result at point."
+    (interactive "P")
+    (if (not (org-in-src-block-p))
+        (call-interactively #'eval-last-sexp)
+      (let* ((info (org-babel-get-src-block-info 'no-eval))
+             (lexical (alist-get :lexical (nth 2 info)))
+             (lexical-val (org-babel-emacs-lisp-lexical lexical))
+             (value (handler-bind
+                        ((error (if eval-expression-debug-on-error
+                                    #'eval-expression--debug
+                                  #'ignore)))
+                      (eval (elisp--preceding-sexp) lexical-val))))
+        (if insert-value
+            (prin1 value (current-buffer))
+          (message "%S" value)))))
+
   :custom
   ;; No extra indentation in source blocks.
-  (org-edit-src-content-indentation 0))
+  (org-edit-src-content-indentation 0)
+
+  :bind
+  (:map org-mode-map
+   ("C-x C-e" . my/eval-last-sexp-org-aware)))
 
 ;; org-modern: Modern styling for org-mode with better visual appearance
 ;; for headlines, blocks, tables, and other org elements.
