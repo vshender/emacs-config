@@ -5,9 +5,12 @@
 ;; Org-mode and related packages configuration.
 ;;
 ;; Includes:
-;; - Core org-mode settings (agenda, TODO states, refile, clocking)
-;; - org-modern for visual styling
-;; - org-roam for Zettelkasten-style notes
+;; - Core org-mode settings (agenda, TODO states, refile, clocking, capture)
+;; - Source code block editing (org-src) with org-aware `eval-last-sexp'
+;; - Visual styling: org-modern, org-modern-indent
+;; - Hidden emphasis markers with reveal-on-cursor (org-appear)
+;; - Pixel-precise table alignment (valign)
+;; - Zettelkasten-style notes (org-roam)
 
 ;;; Code:
 
@@ -52,6 +55,8 @@
   (org-startup-indented t)
   ;; Change the face of a headline if it is marked DONE.
   (org-fontify-done-headline t)
+  ;; Hide emphasis markers (~, /, *, =, _, +) in display.
+  (org-hide-emphasis-markers t)
   ;; Try to get images width from #+ATTR_ORG.
   (org-image-actual-width nil)
 
@@ -203,6 +208,10 @@ With prefix argument INSERT-VALUE, insert the result at point."
 ;; org-modern: Modern styling for org-mode with better visual appearance
 ;; for headlines, blocks, tables, and other org elements.
 (use-package org-modern
+  :custom
+  ;; Disable table styling: it conflicts with `valign-mode'.
+  (org-modern-table nil)
+
   :config
   (with-eval-after-load 'org
     (global-org-modern-mode)))
@@ -212,6 +221,25 @@ With prefix argument INSERT-VALUE, insert the result at point."
 (use-package org-modern-indent
   :ensure (:host github :repo "jdtsmith/org-modern-indent")
   :hook (org-mode . org-modern-indent-mode))
+
+;; valign: Pixel-precise alignment of org-mode tables.  Aligns columns by
+;; rendered pixel width rather than character count, which keeps tables
+;; aligned even when cells contain hidden emphasis markers, LaTeX previews,
+;; images, or other display overlays.
+(use-package valign
+  :hook (org-mode . valign-mode)
+
+  :custom
+  ;; Render vertical bars with Unicode box-drawing characters for nicer
+  ;; visuals.
+  (valign-fancy-bar t))
+
+;; org-appear: Toggle visibility of emphasis markers, links, and other
+;; org-mode constructs hidden by `org-hide-emphasis-markers'.  Markers
+;; become visible when point enters the element and re-hide when it leaves,
+;; keeping rendering clean while keeping editing unambiguous.
+(use-package org-appear
+  :hook (org-mode . org-appear-mode))
 
 ;; org-roam: Zettelkasten-style note-taking with bidirectional links.
 ;; Implements Roam Research concepts in Emacs using an SQLite database.
