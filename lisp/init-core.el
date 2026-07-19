@@ -166,6 +166,19 @@
   :config
   (save-place-mode 1))
 
+;; autorevert: Automatically reload buffers when their files change on disk.
+;; Buffers with unsaved changes are never reverted.
+(use-feature autorevert
+  :custom
+  ;; Rely on file notifications (inotify) only; disable the periodic polling
+  ;; fallback to avoid needless wakeups.
+  (auto-revert-avoid-polling t)
+  ;; Also auto-revert non-file buffers such as dired.
+  (global-auto-revert-non-file-buffers t)
+
+  :config
+  (global-auto-revert-mode 1))
+
 ;; bookmark: Save and jump to named locations in files.
 (use-feature bookmark
   :custom
