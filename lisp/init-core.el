@@ -27,6 +27,9 @@
   ;; Don't pop up UI dialogs when prompting.
   (use-dialog-box nil)
 
+  ;; Allow answering yes/no prompts with just "y" or "n".
+  (use-short-answers t)
+
   ;; Disable bidirectional text scanning for performance (LTR-only).
   (bidi-display-reordering 'left-to-right)
   (bidi-paragraph-direction 'left-to-right)
