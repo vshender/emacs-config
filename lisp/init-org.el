@@ -106,14 +106,34 @@
 
   :config
   ;; Adjust LaTeX preview scale to match text size.
-  ;; `org--get-display-dpi' (changed in org 9.7) returns the physical monitor
-  ;; DPI, but Emacs renders text at the X logical DPI.  Compute the ratio to
-  ;; keep formula size consistent with the surrounding text.
+  ;;
+  ;; Since Org 9.7, LaTeX preview density is derived from
+  ;; `org--get-display-dpi', which uses display-wide pixel and millimeter
+  ;; dimensions.  Under Wayland or with multiple monitors, those dimensions
+  ;; may belong to incompatible coordinate systems and make previews the wrong
+  ;; size.  Compensate with the ratio of the current monitor's physical DPI to
+  ;; Org's reported DPI.  `frame-monitor-attributes' supplies per-monitor
+  ;; geometry on both X11 and Wayland; fall back to Org's unadjusted scale when
+  ;; the physical dimensions are unavailable or invalid.
+  (defun my/org-latex-preview-scale (&optional frame)
+    "Return the LaTeX preview scale for FRAME's current monitor."
+    (with-selected-frame (or frame (selected-frame))
+      (let* ((attributes (frame-monitor-attributes))
+             (geometry (alist-get 'geometry attributes))
+             (mm-size (alist-get 'mm-size attributes))
+             (pixel-height (nth 3 geometry))
+             (mm-height (cadr mm-size)))
+        (if (and (numberp pixel-height)
+                 (numberp mm-height)
+                 (> pixel-height 0)
+                 (> mm-height 0))
+            (/ (* pixel-height 25.4)
+               mm-height
+               (float (org--get-display-dpi)))
+          1.0))))
   (when (display-graphic-p)
     (plist-put org-format-latex-options :scale
-               (/ (float (round (/ (display-pixel-height)
-                                   (/ (display-mm-height) 25.4))))
-                  (org--get-display-dpi))))
+               (my/org-latex-preview-scale)))
 
   ;; LaTeX packages for Russian language support, TikZ, and algorithms.
   (add-to-list 'org-latex-packages-alist '("T2A" "fontenc" t))
