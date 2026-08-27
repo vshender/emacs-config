@@ -24,6 +24,13 @@
 (defvar elpaca-directory (expand-file-name "elpaca/" user-emacs-directory))
 (defvar elpaca-builds-directory (expand-file-name "builds/" elpaca-directory))
 (defvar elpaca-sources-directory (expand-file-name "sources/" elpaca-directory))
+;; Elpaca takes `elpaca-core-date' from its table of Emacs release dates,
+;; falling back to `emacs-build-time'.  Emacs 31.1 is not in the table yet,
+;; and Arch strips build details, so provide its release date until the
+;; table catches up.
+(when (and (null emacs-build-time)
+           (string-prefix-p "31.1" emacs-version))
+  (defvar elpaca-core-date (list 20260824)))
 (defvar elpaca-order '(elpaca :repo "https://github.com/progfolio/elpaca.git"
                               :ref nil :depth 1 :inherit ignore
                               :files (:defaults "elpaca-test.el" (:exclude "extensions"))
