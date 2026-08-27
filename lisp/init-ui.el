@@ -161,7 +161,7 @@
   ;; Setup font.
   (set-frame-font
    (pcase system-type
-     ('gnu/linux "Meslo LG S DZ-9")
+     ('gnu/linux "JetBrainsMono Nerd Font-9")
      ('darwin "Menlo-12"))
    nil t))
 

@@ -27,8 +27,8 @@ External programs the configuration relies on, grouped by area.  Everything outs
   Used by `consult-ripgrep` for project-wide text search and by the MCP ripgrep server for LLM-assisted code search.
   Install via `sudo pacman -S ripgrep` (Arch) or `brew install ripgrep` (macOS).
 
-- Fonts - The frame font is Meslo LG S DZ (Linux) or Menlo (macOS).  `nerd-icons` additionally needs the Nerd Font symbols, installed with `M-x nerd-icons-install-fonts`.
-  Install `ttf-meslo` from the AUR (Arch); Menlo ships with macOS.
+- [JetBrainsMono Nerd Font](https://www.nerdfonts.com/) (Linux) - Frame font; its Nerd Font glyphs also serve `nerd-icons`.
+  Install via `sudo pacman -S ttf-jetbrains-mono-nerd` (Arch).  On macOS the frame font is Menlo, so install the icon font with `M-x nerd-icons-install-fonts`.
 
 ### Programming languages
 
