@@ -74,6 +74,13 @@
   ;; so packages are automatically installed via Elpaca.
   (customize-set-variable 'use-package-always-ensure t))
 
+;; Emacs ships a stub `compat.el' for its built-in libraries.  Install the
+;; real Compat synchronously (`:wait') before anything can load the stub:
+;; once the stub is loaded, it already provides the feature, and packages
+;; that depend on real Compat (consult, vertico, corfu, ...) would silently
+;; end up with the stub.
+(elpaca (compat :wait t))
+
 ;; `use-feature' is a convenience macro for configuring built-in Emacs
 ;; features.  Since `use-package-always-ensure' is set to `t' above, we need
 ;; a way to configure built-in features without triggering Elpaca installation.
