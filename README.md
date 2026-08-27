@@ -46,7 +46,15 @@ External programs the configuration relies on, grouped by area.  Everything outs
   Used by `pet` to parse Python project config files (pyproject.toml, etc.) for virtual environment detection.
   Install `dasel` from the AUR (Arch) or via `brew install dasel` (macOS).
 
-#### Data formats
+#### Web and data formats
+
+- [vscode-html-languageserver](https://github.com/microsoft/vscode-html-languageservice) - HTML language server.
+  Provides completion, hover documentation, and formatting for HTML files.
+  Install via `sudo pacman -S vscode-html-languageserver` (Arch).
+
+- [vscode-css-languageserver](https://github.com/microsoft/vscode-css-languageservice) - CSS language server.
+  Provides completion, diagnostics, and color previews for CSS/SCSS/LESS files.
+  Install via `sudo pacman -S vscode-css-languageserver` (Arch).
 
 - [vscode-json-languageserver](https://github.com/microsoft/vscode-json-languageservice) - JSON language server.
   Provides schema validation, completion, and diagnostics for JSON/JSONC files.
@@ -59,6 +67,8 @@ External programs the configuration relies on, grouped by area.  Everything outs
 - [jq](https://github.com/jqlang/jq) - JSON processor.
   Used by `jq-mode` for interactive JSON filtering.
   Install via `sudo pacman -S jq` (Arch) or `brew install jq` (macOS).
+
+Note: outside Arch, the `vscode-*-languageserver` servers above are shipped by the npm package `vscode-langservers-extracted`, whose executables are named `vscode-*-language-server` (with a hyphen); the configuration expects the Arch names.
 
 ### Documents and notes
 

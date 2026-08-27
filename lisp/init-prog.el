@@ -87,6 +87,13 @@ and install it automatically."
   ;; communication.
   (read-process-output-max (* 4 1024 1024)))
 
+;; yasnippet: Snippet expansion engine.  Loaded for eglot to advertise
+;; snippet support to language servers -- the vscode HTML/CSS servers
+;; provide completion only to snippet-capable clients, and other servers
+;; return richer candidates (e.g. function calls with argument templates).
+(use-package yasnippet
+  :hook (eglot-managed-mode . yas-minor-mode))
+
 ;; eldoc: Built-in feature that displays documentation for the symbol at
 ;; point in the echo area or a dedicated buffer.
 (use-feature eldoc

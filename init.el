@@ -47,7 +47,9 @@
 (require 'init-markdown)                ; Markdown configuration
 (require 'init-productivity)            ; productivity tools
 (require 'init-prog)                    ; general programming settings
+(require 'init-prog-css)                ; CSS configuration
 (require 'init-prog-elisp)              ; Emacs Lisp configuration
+(require 'init-prog-html)               ; HTML configuration
 (require 'init-prog-json)               ; JSON configuration
 (require 'init-prog-python)             ; Python configuration
 (require 'init-prog-yaml)               ; YAML configuration
