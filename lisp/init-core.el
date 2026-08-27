@@ -211,9 +211,9 @@
 
   :config
   ;; Initialize environment variables from the shell when running in a
-  ;; graphical environment (macOS or X11) or as a daemon, since these don't
-  ;; inherit the shell's environment.
-  (when (or (memq window-system '(ns x))
+  ;; graphical environment (macOS, X11, or Wayland/pgtk) or as a daemon,
+  ;; since these don't inherit the shell's environment.
+  (when (or (memq window-system '(ns x pgtk))
             (daemonp))
     (exec-path-from-shell-initialize)))
 
