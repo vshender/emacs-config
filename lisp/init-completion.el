@@ -202,7 +202,12 @@ entire path component instead of a single character."
   (corfu-popupinfo-hide nil))
 
 ;; corfu-terminal: Enables corfu popup display in terminal (non-GUI) Emacs.
+;; Emacs 31 renders child frames natively in the terminal, so corfu works
+;; there out of the box and corfu-terminal became obsolete (corfu warns if
+;; it is even installed).
 (use-package corfu-terminal
+  :if (< emacs-major-version 31)
+
   :config
   (unless (display-graphic-p)
     (corfu-terminal-mode 1)))
