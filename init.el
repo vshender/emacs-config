@@ -22,7 +22,13 @@
 ;; Redirect native compilation cache to the var/ directory.
 (when (native-comp-available-p)
   (startup-redirect-eln-cache
-   (expand-file-name "eln-cache" my/var-dir)))
+   (expand-file-name "eln-cache" my/var-dir))
+
+  ;; Native compilation of third-party packages emits a flood of
+  ;; "function is not known to be defined" warnings after every update.
+  ;; Nothing can be done about them here, so only log them without
+  ;; displaying.
+  (setq native-comp-async-report-warnings-errors 'silent))
 
 ;; Add lisp/ directory to load path for modular config files.
 (add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
