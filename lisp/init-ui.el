@@ -8,9 +8,15 @@
 
 ;; nord-theme: Arctic, north-bluish color palette with custom tweaks.
 (use-package nord-theme
+  :no-require t
+
   :config
-  ;; Load theme first
-  (load-theme 'nord t)
+  ;; Emacs 31 warns when loading Elisp files without a `lexical-binding'
+  ;; cookie; nord-theme.el lacks one and its upstream is dormant (last
+  ;; commit 2025-03).  Suppress the warning for this load.
+  (let ((warning-inhibit-types
+         (cons '(files missing-lexbind-cookie) warning-inhibit-types)))
+    (load-theme 'nord t))
 
   (let ((nord1 "#3B4252")   ; black
         (nord3 "#4C566A")   ; bright-black
