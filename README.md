@@ -32,6 +32,26 @@ External programs the configuration relies on, grouped by area.  Everything outs
 
 ### Programming languages
 
+#### OCaml
+
+OCaml tooling is installed via [opam](https://opam.ocaml.org/):
+
+```bash
+opam install ocaml-lsp-server ocamlformat ocp-indent utop
+```
+
+- [ocaml-lsp-server](https://github.com/ocaml/ocaml-lsp) - OCaml language server.
+  Provides code completion, diagnostics, and navigation via eglot and `ocaml-eglot`.
+
+- [ocamlformat](https://github.com/ocaml-ppx/ocamlformat) - OCaml code formatter.
+  Used by ocaml-lsp-server (through `ocamlformat-rpc`) to pretty-print type signatures shown on hover.  Code formatting itself is only invoked explicitly (`eglot-format`) and requires an `.ocamlformat` file in the project.
+
+- [ocp-indent](https://github.com/OCamlPro/ocp-indent) - OCaml indentation tool.
+  Used by `ocp-indent` mode for automatic indentation of OCaml code.
+
+- [utop](https://github.com/ocaml-community/utop) - Improved OCaml REPL.
+  Used by `utop` mode for interactive evaluation from OCaml buffers.
+
 #### Python
 
 - [basedpyright](https://github.com/DetachHead/basedpyright) - Python language server.

@@ -51,6 +51,7 @@
 (require 'init-prog-elisp)              ; Emacs Lisp configuration
 (require 'init-prog-html)               ; HTML configuration
 (require 'init-prog-json)               ; JSON configuration
+(require 'init-prog-ocaml)              ; OCaml configuration
 (require 'init-prog-python)             ; Python configuration
 (require 'init-prog-yaml)               ; YAML configuration
 
