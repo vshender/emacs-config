@@ -85,7 +85,11 @@ and install it automatically."
   (eglot-events-buffer-size 0)
   ;; Increase process output buffer from 64KB to 4MB for faster LSP
   ;; communication.
-  (read-process-output-max (* 4 1024 1024)))
+  (read-process-output-max (* 4 1024 1024))
+  ;; Don't indicate available code actions: servers like ocamllsp offer one
+  ;; on virtually every line, so the indicators carry no signal and only
+  ;; lag behind the cursor.
+  (eglot-code-action-indications '()))
 
 ;; yasnippet: Snippet expansion engine.  Loaded for eglot to advertise
 ;; snippet support to language servers -- the vscode HTML/CSS servers
