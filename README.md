@@ -66,6 +66,14 @@ opam install ocaml-lsp-server ocamlformat ocp-indent utop
   Used by `pet` to parse Python project config files (pyproject.toml, etc.) for virtual environment detection.
   Install `dasel` from the AUR (Arch) or via `brew install dasel` (macOS).
 
+#### Rust
+
+- [rust-analyzer](https://rust-analyzer.github.io/) - Rust language server, run with clippy for diagnostics.
+  Install via `rustup component add rust-analyzer`; the configuration also finds the rustup-managed binary when it is not on `PATH` (as on Arch).
+
+- [cargo](https://doc.rust-lang.org/cargo/) - Used by `cargo-minor-mode` for build/test commands.
+  Part of the Rust toolchain: install `rustup` via `sudo pacman -S rustup` (Arch) or `brew install rustup` (macOS), then run `rustup default stable`.
+
 #### Web and data formats
 
 - [vscode-html-languageserver](https://github.com/microsoft/vscode-html-languageservice) - HTML language server.
