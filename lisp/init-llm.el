@@ -105,6 +105,11 @@ original window if the current window differs from it."
    :repo "stevemolitor/claude-code.el"
    :files (:defaults "examples/hooks/claude-code-auto-revert-hook.el"))
 
+  ;; `claude-code-handle-hook' is the entry point the settings.json hooks
+  ;; call via `emacsclient'; autoload it so the hooks work (and load the
+  ;; package) even before any interactive claude-code command is used.
+  :commands (claude-code-handle-hook)
+
   :init
   ;; Declare external variable from eat package.
   (defvar eat-term-name)
