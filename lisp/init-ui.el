@@ -18,6 +18,15 @@
          (cons '(files missing-lexbind-cookie) warning-inhibit-types)))
     (load-theme 'nord t))
 
+  ;; With the default `nord-region-highlight', the theme specifies `region' with
+  ;; `:foreground nil', which Emacs rejects with a warning every time the face
+  ;; is recalculated (e.g. for each new child frame).  Re-set the face from the
+  ;; theme's own background, dropping the foreground.
+  (let ((bg (plist-get (cadr (car (cadr (assq 'nord (get 'region 'theme-face)))))
+                       :background)))
+    (custom-theme-set-faces
+     'nord `(region ((t (:background ,bg))))))
+
   (let ((nord1 "#3B4252")   ; black
         (nord3 "#4C566A")   ; bright-black
         (nord5 "#E5E9F0")   ; white
