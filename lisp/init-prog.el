@@ -89,7 +89,11 @@ and install it automatically."
   ;; Don't indicate available code actions: servers like ocamllsp offer one
   ;; on virtually every line, so the indicators carry no signal and only
   ;; lag behind the cursor.
-  (eglot-code-action-indications '()))
+  (eglot-code-action-indications '())
+  ;; Let the project's server manage files reached through xref (library
+  ;; sources, system headers, ...) instead of starting a new server for
+  ;; whatever project those files happen to belong to.
+  (eglot-extend-to-xref t))
 
 ;; yasnippet: Snippet expansion engine.  Loaded for eglot to advertise
 ;; snippet support to language servers -- the vscode HTML/CSS servers
