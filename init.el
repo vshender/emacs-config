@@ -48,6 +48,7 @@
 (require 'init-reading)                 ; document reading (EPUB, PDF, DjVu)
 (require 'init-productivity)            ; productivity tools
 (require 'init-prog)                    ; general programming settings
+(require 'init-prog-c)                  ; C/C++ configuration
 (require 'init-prog-css)                ; CSS configuration
 (require 'init-prog-elisp)              ; Emacs Lisp configuration
 (require 'init-prog-html)               ; HTML configuration

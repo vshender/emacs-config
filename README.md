@@ -32,6 +32,11 @@ External programs the configuration relies on, grouped by area.  Everything outs
 
 ### Programming languages
 
+#### C/C++
+
+- [clangd](https://clangd.llvm.org/) - C/C++ language server (eglot's default for C modes).
+  Install via `sudo pacman -S clang` (Arch) or `brew install llvm` (macOS).
+
 #### OCaml
 
 OCaml tooling is installed via [opam](https://opam.ocaml.org/):
