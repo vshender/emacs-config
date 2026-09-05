@@ -45,6 +45,7 @@
 (require 'init-vcs)                     ; version control (magit, diff-hl)
 (require 'init-llm)                     ; LLM integration (gptel, claude-code)
 (require 'init-markdown)                ; Markdown configuration
+(require 'init-reading)                 ; document reading (EPUB, PDF, DjVu)
 (require 'init-productivity)            ; productivity tools
 (require 'init-prog)                    ; general programming settings
 (require 'init-prog-css)                ; CSS configuration

@@ -8,7 +8,7 @@ Personal Emacs configuration using [Elpaca](https://github.com/progfolio/elpaca)
 git clone https://github.com/vshender/.emacs.d ~/.emacs.d
 ```
 
-On first launch, Elpaca will automatically install all required packages.  Tree-sitter grammars are compiled on demand when a file of the corresponding language is opened (see [Core](#core) for the tools this needs).
+On first launch, Elpaca will automatically install all required packages, and any missing tree-sitter grammar is compiled at startup into `var/tree-sitter/`.  `pdf-tools` builds its `epdfinfo` server later, when the first PDF is opened -- that PDF may fail to display while the build is still running, so reopen it afterwards.  See [Core](#core) and [Documents and notes](#documents-and-notes) for the tools these builds need.
 
 ## Dependencies
 
@@ -108,11 +108,23 @@ Note: outside Arch, the `vscode-*-languageserver` servers above are shipped by t
   The preview preamble uses the `fontenc` (T2A), `babel` (russian), `tikz`, and `algpseudocode` packages.
   Install via `sudo pacman -S texlive-basic texlive-latex texlive-langcyrillic texlive-pictures texlive-mathscience imagemagick` (Arch) or `brew install --cask mactex` and `brew install imagemagick` (macOS).
 
+- [poppler](https://poppler.freedesktop.org/) - PDF rendering library.
+  Required to build and run `epdfinfo`, the server `pdf-tools` renders PDFs with.  Building it also needs the autotools and pkg-config.
+  Install via `sudo pacman -S poppler-glib base-devel` (Arch) or `brew install poppler automake` (macOS).
+
+- [djvulibre](https://djvu.sourceforge.net/) - DjVu document tools.
+  Required by `djvu` for rendering and editing DjVu files (`ddjvu`, `djvused`, `djvm`).
+  Install via `sudo pacman -S djvulibre` (Arch) or `brew install djvulibre` (macOS).
+
+- [unzip](https://infozip.sourceforge.net/) - Archive extraction utility.
+  Required by `nov` for reading EPUB files (which are ZIP archives).
+  Install via `sudo pacman -S unzip` (Arch); ships with macOS.
+
 ### Notifications
 
 - [libnotify](https://gitlab.gnome.org/GNOME/libnotify) (Linux) / [terminal-notifier](https://github.com/julienXX/terminal-notifier) (macOS) - Desktop notification tools.
   Used by `alert` for sending desktop notifications (e.g., pomodoro timer events).
-  Install via `sudo pacman -S libnotify` (Arch), `sudo apt install libnotify-bin` (Debian/Ubuntu), or `brew install terminal-notifier` (macOS).
+  Install via `sudo pacman -S libnotify` (Arch) or `brew install terminal-notifier` (macOS).
 
 ### AI assistants
 
