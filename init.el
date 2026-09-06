@@ -54,6 +54,7 @@
 (require 'init-prog-ocaml)              ; OCaml configuration
 (require 'init-prog-python)             ; Python configuration
 (require 'init-prog-rust)               ; Rust configuration
+(require 'init-prog-toml)               ; TOML configuration
 (require 'init-prog-yaml)               ; YAML configuration
 
 ;;; init.el ends here
