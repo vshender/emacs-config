@@ -147,6 +147,18 @@ entire path component instead of a single character."
    ([remap occur] . consult-line)
    ("M-s g" . consult-ripgrep)))
 
+;; consult-dir: Switch directories from the minibuffer.  Candidates come from
+;; bookmarks, project roots and recent directories.  Outside the minibuffer
+;; "C-x C-d" prompts for a file in the chosen directory; inside one it shadows
+;; the directory typed so far with the chosen one, keeping the completion
+;; session.  "C-x C-j" searches for a file below the typed directory.
+(use-package consult-dir
+  :bind
+  (("C-x C-d" . consult-dir)
+   :map vertico-map
+   ("C-x C-d" . consult-dir)
+   ("C-x C-j" . consult-dir-jump-file)))
+
 ;; Embark: Context-aware actions on completion candidates.  Select first, then
 ;; decide what to do with it (export, collect, act).
 (use-package embark
