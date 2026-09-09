@@ -161,7 +161,17 @@
   ;; Resume clocking task on clock-in if the clock is open.
   (org-clock-in-resume t)
   ;; Change task state to STARTED when clocking in.
-  (org-clock-in-switch-to-state "STARTED"))
+  (org-clock-in-switch-to-state "STARTED")
+  ;; Persist the running clock and clock history across Emacs sessions.
+  (org-clock-persist t)
+  ;; Store the clock state file in the var/ directory.
+  (org-clock-persist-file (expand-file-name "org-clock-save.el" my/var-dir))
+
+  :config
+  ;; Hook `org-clock-load' into `org-mode-hook' and `org-clock-save' into
+  ;; `kill-emacs-hook', so a clock running at shutdown is restored on next
+  ;; start.
+  (org-clock-persistence-insinuate))
 
 ;; org-capture: Quick capture of ideas, tasks, and notes into org files
 ;; without disrupting workflow.
