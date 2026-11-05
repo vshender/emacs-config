@@ -11,6 +11,7 @@
 ;; - Hidden emphasis markers with reveal-on-cursor (org-appear)
 ;; - Pixel-precise table alignment (valign)
 ;; - Zettelkasten-style notes (org-roam)
+;; - Daily journal (org-roam-dailies) and weekly plans (org-capture)
 
 ;;; Code:
 
@@ -182,9 +183,15 @@
    `(;; Quick task capture with timestamp and optional link to clocked task.
      ("i" "Inbox" entry (file ,(expand-file-name "inbox.org" my/org-dir))
       "* TODO %?\nEntered on %T\n%(if (org-clocking-p) \"Clocked: %K\" \"\")\n%i")
-     ;; Daily journal entry filed by date with time header.
-     ("j" "Journal" entry (file+olp+datetree ,(expand-file-name "diary.org" my/org-dir))
-      "*** %(format-time-string \"%H:%M\")\n%?"))))
+     ;; A week with its plan and an empty review, filed under the ISO week of
+     ;; a prompted date, so that the plan for the next week can be written at
+     ;; the end of the current one.  The plan groups items by area, and the
+     ;; `[/]' cookies count done items.  The review is written later in the
+     ;; file, next to the plan: with a `C-u' prefix, `org-capture' opens the
+     ;; file at the week instead of capturing.
+     ("w" "Week" entry (file+olp+datetree ,(expand-file-name "weekly.org" my/org-dir))
+      "* Plan\n- personal [/]\n  - [ ] %?\n- health [/]\n- projects [/]\n- education [/]\n- work [/]\n* Review\n- Went well:\n- Didn't go well:\n- Why:\n- Change next week:"
+      :tree-type (year week) :time-prompt t))))
 
 ;; org-refile: Move or copy org entries to different locations in org files.
 ;; Enables organizing captured items into appropriate project files.
@@ -314,6 +321,32 @@ With prefix argument INSERT-VALUE, insert the result at point."
   :custom
   ;; Store database in var/ directory.
   (org-roam-db-location (expand-file-name "org-roam.db" my/var-dir)))
+
+;; org-roam-dailies: Journal with one org-roam note per day, so that day
+;; entries and notes can link to each other.
+(use-feature org-roam-dailies
+  :after org-roam
+
+  :custom
+  ;; A day note has a plan, timed journal entries and an evening review.
+  ;; The capture adds a timed entry under "Journal"; the plan and the review
+  ;; are written by hand.  The file name stays `%Y-%m-%d' because the
+  ;; calendar of `org-roam-dailies-goto-date' marks days by file name.
+  (org-roam-dailies-capture-templates
+   '(("j" "journal" entry "* %<%H:%M>\n%?"
+      :target (file+head+olp
+               "%<%Y-%m-%d>.org"
+               "#+title: %<%Y-%m-%d, %A>\n#+filetags: :daily:\n\n* Plan\n* Journal\n* Review\n- Most important:\n- Takeaway:\n- Tomorrow:\n- Good things:\n"
+               ("Journal")))))
+
+  :config
+  ;; Create the directory for day notes.  org-roam does not create it, and
+  ;; Emacs visits a file in a missing directory as read-only, so the first
+  ;; capture fails with "Buffer is read-only".
+  (make-directory (expand-file-name org-roam-dailies-directory org-roam-directory) t)
+
+  :bind-keymap
+  ("C-c r d" . org-roam-dailies-map))
 
 (provide 'init-org)
 
