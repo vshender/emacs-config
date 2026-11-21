@@ -71,71 +71,7 @@
   ;; Unchecked boxes will block switching the parent to DONE.
   (org-enforce-todo-checkbox-dependencies t)
 
-  ;; Use imagemagick for LaTeX preview.
-  (org-preview-latex-default-process 'imagemagick)
-  ;; LaTeX preview process configuration.
-  (org-preview-latex-process-alist
-   '((dvipng :programs ("latex" "dvipng")
-             :description "dvi > png"
-             :message "you need to install the programs: latex and dvipng."
-             :image-input-type "dvi"
-             :image-output-type "png"
-             :image-size-adjust (1.0 . 1.0)
-             :latex-compiler ("latex -interaction nonstopmode -output-directory %o %f")
-             :image-converter ("dvipng -D %D -T tight -o %O %f")
-             :transparent-image-converter ("dvipng -D %D -T tight -bg Transparent -o %O %f"))
-     (dvisvgm :programs ("latex" "dvisvgm")
-              :description "dvi > svg"
-              :message "you need to install the programs: latex and dvisvgm."
-              :image-input-type "dvi"
-              :image-output-type "svg"
-              :image-size-adjust (1.7 . 1.5)
-              :latex-compiler ("latex -interaction nonstopmode -output-directory %o %f")
-              :image-converter ("dvisvgm %f --no-fonts --exact-bbox --scale=%S --output=%O"))
-     ;; `-alpha off' is needed on Linux: ImageMagick renders PDF pages with
-     ;; semi-transparent edge pixels, which prevents `-trim' from detecting
-     ;; the uniform background.  Discarding the alpha channel makes all
-     ;; pixels fully opaque so `-trim' works correctly.
-     (imagemagick :programs ("latex" "magick")
-                  :description "pdf > png"
-                  :message "you need to install the programs: latex and imagemagick."
-                  :image-input-type "pdf"
-                  :image-output-type "png"
-                  :image-size-adjust (1.0 . 1.0)
-                  :latex-compiler ("pdflatex -interaction nonstopmode -output-directory %o %f")
-                  :image-converter ("magick -density %D -antialias %f -alpha off -trim -quality 100 %O"))))
-
   :config
-  ;; Adjust LaTeX preview scale to match text size.
-  ;;
-  ;; Since Org 9.7, LaTeX preview density is derived from
-  ;; `org--get-display-dpi', which uses display-wide pixel and millimeter
-  ;; dimensions.  Under Wayland or with multiple monitors, those dimensions
-  ;; may belong to incompatible coordinate systems and make previews the wrong
-  ;; size.  Compensate with the ratio of the current monitor's physical DPI to
-  ;; Org's reported DPI.  `frame-monitor-attributes' supplies per-monitor
-  ;; geometry on both X11 and Wayland; fall back to Org's unadjusted scale when
-  ;; the physical dimensions are unavailable or invalid.
-  (defun my/org-latex-preview-scale (&optional frame)
-    "Return the LaTeX preview scale for FRAME's current monitor."
-    (with-selected-frame (or frame (selected-frame))
-      (let* ((attributes (frame-monitor-attributes))
-             (geometry (alist-get 'geometry attributes))
-             (mm-size (alist-get 'mm-size attributes))
-             (pixel-height (nth 3 geometry))
-             (mm-height (cadr mm-size)))
-        (if (and (numberp pixel-height)
-                 (numberp mm-height)
-                 (> pixel-height 0)
-                 (> mm-height 0))
-            (/ (* pixel-height 25.4)
-               mm-height
-               (float (org--get-display-dpi)))
-          1.0))))
-  (when (display-graphic-p)
-    (plist-put org-format-latex-options :scale
-               (my/org-latex-preview-scale)))
-
   ;; LaTeX packages for Russian language support, TikZ, and algorithms.
   (add-to-list 'org-latex-packages-alist '("T2A" "fontenc" t))
   (add-to-list 'org-latex-packages-alist '("english, russian" "babel" t))

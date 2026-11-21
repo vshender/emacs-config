@@ -109,9 +109,9 @@ Note: outside Arch, the `vscode-*-languageserver` servers above are shipped by t
   Used by `markdown-mode` for document preview and export.
   Install via `sudo pacman -S pandoc-cli` (Arch) or `brew install pandoc` (macOS).
 
-- [TeX Live](https://tug.org/texlive/) and [ImageMagick](https://imagemagick.org/) - LaTeX preview in Org (`pdflatex` + `magick`).
+- [TeX Live](https://tug.org/texlive/) and [dvisvgm](https://dvisvgm.de/) - LaTeX preview in Org (`latex` + `dvisvgm`).
   The preview preamble uses the `fontenc` (T2A), `babel` (russian), `tikz`, and `algpseudocode` packages.
-  Install via `sudo pacman -S texlive-basic texlive-latex texlive-langcyrillic texlive-pictures texlive-mathscience imagemagick` (Arch) or `brew install --cask mactex` and `brew install imagemagick` (macOS).
+  Install via `sudo pacman -S texlive-basic texlive-latex texlive-langcyrillic texlive-pictures texlive-mathscience dvisvgm` (Arch) or `brew install --cask mactex` (macOS; MacTeX includes `dvisvgm`).
 
 - [poppler](https://poppler.freedesktop.org/) - PDF rendering library.
   Required to build and run `epdfinfo`, the server `pdf-tools` renders PDFs with.  Building it also needs the autotools and pkg-config.
