@@ -24,6 +24,14 @@
    'python "https://github.com/tree-sitter/tree-sitter-python")
   (add-to-list 'major-mode-remap-alist '(python-mode . python-ts-mode)))
 
+;; project: Treat any directory containing pyproject.toml as a project root.
+;; Basedpyright reads its settings from the pyproject.toml of the project
+;; root, so when a Python project is nested inside a larger repository, eglot
+;; would otherwise start the server in a root that has no settings.
+(use-feature project
+  :config
+  (add-to-list 'project-vc-extra-root-markers "pyproject.toml"))
+
 ;; flymake: Enable on-the-fly syntax checking for Python.
 (use-feature flymake
   :hook (python-base-mode . flymake-mode))

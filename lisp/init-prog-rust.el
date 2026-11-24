@@ -23,8 +23,8 @@
 ;; Note: this variable is read via `project--value-in-dir', so it must be
 ;; set globally (or in dir-locals) -- a buffer-local value has no effect.
 (use-feature project
-  :custom
-  (project-vc-extra-root-markers '("Cargo.toml")))
+  :config
+  (add-to-list 'project-vc-extra-root-markers "Cargo.toml"))
 
 ;; eglot: Configure Rust-specific LSP settings.
 ;;
